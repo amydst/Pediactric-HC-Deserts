@@ -1,0 +1,11 @@
+Column Name,Label
+GEO_ID,Geography
+NAME,Geographic Area Name
+S0101_C01_001E,Estimate!!Total!!Total population
+S0101_C01_002E,Estimate!!Total!!Total population!!AGE!!Under 5 years
+S0101_C01_003E,Estimate!!Total!!Total population!!AGE!!5 to 9 years
+S0101_C01_004E,Estimate!!Total!!Total population!!AGE!!10 to 14 years
+S0101_C01_005E,Estimate!!Total!!Total population!!AGE!!15 to 19 years
+,
+,
+S1901_C01_012E,Estimate!!Households!!Median income (dollars)
