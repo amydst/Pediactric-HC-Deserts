@@ -6,7 +6,10 @@ from sqlalchemy.orm import sessionmaker
 
 app = Flask(__name__)
 
-# Enable CORS for all origins
+# Enable CORS for all origins. I have to download it (CORS is needed to allow your frontend 
+# (on port 5500) to access resources from your backend API (on port 5000) 
+# because browsers block cross-origin requests by default for security reasons.)
+
 CORS(app)
 
 # Connect to the PostgreSQL database
