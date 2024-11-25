@@ -34,7 +34,11 @@ def get_locations():
             Demographics.longitude,
             Demographics.count_of_licensees,
             Demographics.coverage_rate 
-        ).all()
+        ).filter(
+            Demographics.coverage_rate != None,  # Exclude rows with None in coverage_rate
+            Demographics.coverage_rate != 0,     # Exclude rows where coverage_rate is 0
+            Demographics.count_of_licensees > 0 # Exclude rows where doctor count is 0
+        ).all()  # Apply the filters
 
         locations = []
         # Loop through the results and structure the data as needed
