@@ -41,7 +41,7 @@ def home():
 # Route for the map page
 @app.route("/map")
 def map_page():
-    return render_template("ren_a_doc_map.html")
+    return render_template("ren_a_doc_map.html")  # This will load the map page from the templates folder
 
 # API route to return data in JSON format
 @app.route("/api/v1.0/locations")
