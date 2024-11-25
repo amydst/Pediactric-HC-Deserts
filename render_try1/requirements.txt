@@ -20,6 +20,7 @@ MarkupSafe==3.0.2
 multidict==6.1.0
 packaging==24.2
 propcache==0.2.0
+psycopg2==2.9.10
 python-dateutil==2.9.0.post0
 six==1.16.0
 SQLAlchemy==2.0.36
