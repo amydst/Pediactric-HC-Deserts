@@ -24,7 +24,7 @@
 
     body {
       font-family: Arial, sans-serif;
-      background-image: url("/static/images/pediatrician.jpg");  /* Path to your background image */
+      background-image: url("{{ url_for('static', filename='images/pediatrician.jpg') }}"); /* Flask URL generation */
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
