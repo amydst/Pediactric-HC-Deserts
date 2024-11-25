@@ -9,6 +9,7 @@ blinker==1.9.0
 botocore==1.35.36
 click==8.1.7
 Flask==3.1.0
+Flask-Cors==5.0.0
 frozenlist==1.5.0
 gunicorn==23.0.0
 idna==3.10
