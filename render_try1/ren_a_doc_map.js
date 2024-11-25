@@ -67,11 +67,8 @@ function createCoverageCircle(location) {
     .addTo(coverageLayer);  // Add the circle to the coverage layer
 }
 
-// API URL for fetching data (use environment variable or default URL)
-const API_URL = process.env.API_URL || 'https://project-3-tbuy.onrender.com/api/v1.0/locations';  // API URL for location data
-
 // Fetch location data from the API
-fetch(API_URL)  // Use the dynamically set API_URL
+fetch('https://project-3-tbuy.onrender.com/api/v1.0/locations')  // Use the API URL directly
 .then(response => {
     if (!response.ok) {
         throw new Error('Network response was not ok');
