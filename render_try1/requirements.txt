@@ -10,12 +10,14 @@ botocore==1.35.36
 click==8.1.7
 Flask==3.1.0
 frozenlist==1.5.0
+gunicorn==23.0.0
 idna==3.10
 itsdangerous==2.2.0
 Jinja2==3.1.4
 jmespath==1.0.1
 MarkupSafe==3.0.2
 multidict==6.1.0
+packaging==24.2
 propcache==0.2.0
 python-dateutil==2.9.0.post0
 six==1.16.0
