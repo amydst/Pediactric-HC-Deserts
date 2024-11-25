@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from flask_cors import CORS
 from sqlalchemy import create_engine
 from sqlalchemy.ext.automap import automap_base
@@ -32,6 +32,11 @@ Demographics = Base.classes.demographics
 @app.route("/")
 def home():
     return "Welcome to the Pediatrician Map API! Visit /api/v1.0/locations for data."
+
+@app.route("/map")
+def show_map():
+    # Render the map.html page
+    return render_template("map.html")
 
 @app.route("/api/v1.0/locations")
 def get_locations():
