@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>California Pediatrician Map</title>
+  <title>Pediatrician Map</title>
 
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -13,8 +12,8 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
 
-  <!-- Your custom CSS -->
-  <link rel="stylesheet" type="text/css" href="ren_a_doc_map.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ren_a_doc_map.css') }}">
   
   <style>
     body, html {
@@ -28,15 +27,13 @@
     }
   </style>
 </head>
-
 <body>
   <div id="map"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
 
-  <!-- JavaScript with map logic -->
-  <script src="ren_a_doc_map.js"></script>
+  <!-- Custom JS for the map -->
+  <script src="{{ url_for('static', filename='js/ren_a_doc_map.js') }}"></script>
 </body>
-
 </html>

@@ -13,7 +13,7 @@ function createDoctorIcon() {
 
 // Create the map centered on California
 let map = L.map('map', {
-    center: [36.7783, -119.4179],
+    center: [36.7783, -119.4179],  // Coordinates for California
     zoom: 6
 });
 
@@ -48,7 +48,7 @@ function getColor(coverageRate) {
 
 // Function to calculate the radius of the coverage circle based on the coverage rate
 function getRadius(coverageRate) {
-    return Math.max(2000, 3000 - coverageRate * 10);
+    return Math.max(2000, 3000 - coverageRate * 10); // Adjust radius based on coverage rate
 }
 
 // Function to create coverage circle on the map
@@ -71,16 +71,18 @@ fetch('/api/v1.0/locations')
 .then(response => response.json())
 .then(data => {
     data.forEach(location => {
+        // Create a marker for doctors only if there's a positive number of doctors
         let countOfDoctors = location.Count_of_Licensees || 0;
 
         if (countOfDoctors > 0) {
             L.marker([location.Latitude, location.Longitude], {
-                icon: createDoctorIcon()
+                icon: createDoctorIcon()  // Set the doctor icon
             })
             .bindPopup(`<b>Doctors Count: ${countOfDoctors}</b>`)
-            .addTo(doctorCluster);
+            .addTo(doctorCluster);  // Add marker to the doctor cluster
         }
 
+        // Create the coverage circle for each location
         createCoverageCircle(location);
     });
 })

@@ -29,15 +29,21 @@ Base.prepare(autoload_with=engine)
 # Access the 'demographics' table (automatically mapped)
 Demographics = Base.classes.demographics
 
+# Route for the home page (just a welcome message)
 @app.route("/")
 def home():
-    return "Welcome to the Pediatrician Map API! Visit /api/v1.0/locations for data."
+    return """
+    <h1>Welcome to the Pediatrician Map API!</h1>
+    <p>Visit <a href='/api/v1.0/locations'>/api/v1.0/locations</a> for data in JSON format.</p>
+    <p>Visit <a href='/map'>/map</a> to see the map of locations.</p>
+    """
 
+# Route for the map page
 @app.route("/map")
-def show_map():
-    # Render the map.html page
-    return render_template("map.html")
+def map_page():
+    return render_template("ren_a_doc_map.html")
 
+# API route to return data in JSON format
 @app.route("/api/v1.0/locations")
 def get_locations():
     # Create a new session to interact with the database
