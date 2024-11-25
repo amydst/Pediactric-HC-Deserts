@@ -1,0 +1,14 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
+  h1 {
+    text-align: center;
+    margin: 20px 0;
+  }
+  
+  #plot {
+    height: calc(100% - 60px);
+  };

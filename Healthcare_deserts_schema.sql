@@ -9,29 +9,29 @@ CREATE TABLE Population(
 	PRIMARY KEY (ZIP_Code)
 ); 
 
-CREATE TABLE Demographics(
-	Demo_ID float NOT NULL,
-	ZIP_Code varchar(5) NOT NULL,
-	Household_Median_Income float,
-	Household_Mean_Income float,
-	Family_Median_Income float,
-	Family_Mean_Income float,
-	Couple_Family_Median_Income float,
-	Couple_Family_Mean_Income float,
-	Nonfamily_Household_Median_Income float,
-	Nonfamily_Household_Mean_Income float,
-	Land_Area_sq_miles float,
-	Water_Area_sq_miles float,
-	Poverty_Count float,
-	Poverty_Rate float,
-	Latitude float,	
-	Longitude float,
-	Per_Capita_Income float,
-	Insurance_coverage_status float,
-	Insurance_coverage_Rate float,
-	Doctor_Count float,
-	PRIMARY KEY (Demo_ID),
-	FOREIGN KEY (ZIP_Code) REFERENCES Population(ZIP_Code)
+CREATE TABLE Demographics (
+    Demo_ID FLOAT NOT NULL,
+    ZIP_Code VARCHAR(5) NOT NULL,
+    Household_Median_Income FLOAT,
+    Household_Mean_Income FLOAT,
+    Family_Median_Income FLOAT,
+    Family_Mean_Income FLOAT,
+    Married_Couple_Family_Median_Income FLOAT,
+    Married_Couple_Family_Mean_Income FLOAT,
+    Nonfamily_Household_Median_Income FLOAT,
+    Nonfamily_Household_Mean_Income FLOAT,
+    Land_Area_sq_miles FLOAT,
+    Water_Area_sq_miles FLOAT,
+    Latitude FLOAT,
+    Longitude FLOAT,
+    Per_Capita_Income FLOAT,
+    Poverty_Count FLOAT,
+    Poverty_Rate FLOAT,
+    Insurance_Coverage_Status FLOAT,
+    Coverage_Rate FLOAT,
+    Count_Of_Licensees FLOAT,
+    PRIMARY KEY (Demo_ID),
+    FOREIGN KEY (ZIP_Code) REFERENCES Population(ZIP_Code)
 );
 
 
