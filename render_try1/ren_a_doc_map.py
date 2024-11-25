@@ -75,4 +75,4 @@ def get_locations():
 
 if __name__ == "__main__":
     # In production, do not set debug to True.
-    app.run(debug=False, host='0.0.0.0', port=5000)
+    app.run(debug=False, host='0.0.0.0', port=10000)
