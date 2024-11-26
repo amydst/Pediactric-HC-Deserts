@@ -50,9 +50,9 @@ function getRadius(coverageRate) {
 
 // Function to create the coverage circle on the map
 function createCoverageCircle(location) {
-    let coverageRate = location.coverageRate;  // Get the coverage rate from the location data
+    let coverageRate = location.Coverage_Rate;  // Get the coverage rate from the location data
 
-    L.circle([location.latitude, location.longitude], {
+    L.circle([location.Latitude, location.Longitude], {
         color: getColor(coverageRate),  
         fillColor: getColor(coverageRate),  
         fillOpacity: 0.6,  
@@ -69,10 +69,10 @@ fetch('/api/v1.0/locations')
 .then(data => {
     data.forEach(location => {
         // Get the children-to-doctor ratio
-        let childrenToDoctorRatio = location.childrenToDoctorRatio || 0;
+        let childrenToDoctorRatio = location.Children_to_Doctor_Ratio || 0;
 
         // Create a marker for the doctor at the given latitude and longitude
-        L.marker([location.latitude, location.longitude], {
+        L.marker([location.Latitude, location.Longitude], {
             icon: createDoctorIcon()  //doctor icon
         })
         .bindPopup('<b>Children to Doctor Ratio: ' + childrenToDoctorRatio.toFixed(2) + '</b>')  // Popup with the ratio
