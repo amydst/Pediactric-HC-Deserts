@@ -1,45 +1,46 @@
 html, body {
-  height: 100%;         
-  margin: 0;            
-  padding: 0;           
+  height: 100%;
+  margin: 0;
+  padding: 0;
   font-family: Arial, sans-serif;
   color: black;
 }
 
 /* Homepage styles */
 .home-page {
-  background-image: url("/static/images/pediatrician.jpg");
+  background-image: url("/static/images/pediatrician.jpg"); /* Ensure correct path to the image */
   background-size: cover;  
-  background-position: center; 
+  background-position: center;
   background-repeat: no-repeat; 
   background-attachment: fixed; 
   color: white;             
   height: 100vh;            
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;  
-  align-items: flex-start;     
-  padding: 20px;            
+  justify-content: flex-start;  /* Align content at the top */
+  align-items: flex-start;     /* Align content to the left */
+  padding: 20px;             
 }
 
+/* Styling for header and paragraph on the homepage */
 .home-page h1, .home-page p {
   color: white;  
-  text-align: left; 
+  text-align: left; /* Left-aligned text */
 }
 
 /* Map page - no background */
 .map-page {
-  background-image: none; 
+  background-image: none;
 }
 
-/* Map takes full screen */
+/* Map container full screen styles */
 #map {
-  width: 100vw;        
-  height: 100vh;       
-  position: absolute;  
+  width: 100vw;        /* Full width of the viewport */
+  height: 100vh;       /* Full height of the viewport */
+  position: absolute;  /* Make sure the map takes up the entire space */
   top: 0;
   left: 0;
-  z-index: 1;          
-  margin: 0;           
-  padding: 0;          
+  z-index: 1;          /* Ensure map is above other content */
+  margin: 0;           /* No margin for the map */
+  padding: 0;          /* No padding */
 }
