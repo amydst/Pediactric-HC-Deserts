@@ -13,13 +13,6 @@
 
   <!-- Your custom CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/ren_a_doc_map.css') }}">
-
-  <style>
-    #map {
-      width: 100%;
-      height: 600px;  /* Możesz zmienić wysokość w zależności od potrzeby */
-    }
-  </style>
 </head>
 <body class="map-page">
   <div id="map"></div>  <!-- Map will be here -->
@@ -27,7 +20,7 @@
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
-  <!-- Leaflet Heatmap JS -->
+  <!-- Leaflet Heatmap JS (alternate version) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-heat/0.2.0/leaflet-heat.js"></script>
 
   <!-- Your custom JS -->
