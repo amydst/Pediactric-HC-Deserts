@@ -63,26 +63,30 @@ function createDoctorRatioHeatmap(location) {
 fetch('/api/v1.0/locations')
 .then(response => response.json())
 .then(data => {
-
+    // Create coverage circles and heatmap data
     data.forEach(location => {
         createCoverageCircle(location);  // Create coverage rate circle
         createDoctorRatioHeatmap(location);  // Add data point for doctor ratio heatmap
     });
 
-    // Create the heatmap layer using the doctor ratio data
-    let heat = L.heatLayer(heatmapData, {
-        radius: 25,
-        blur: 15,
-        maxZoom: 17,
-        gradient: { 
-            0.4: 'blue', 
-            0.6: 'lime', 
-            0.8: 'red' 
-        }
-    }).addTo(doctorRatioLayer);
+    // Wait for a moment before adding the heatmap layer to ensure data is ready
+    setTimeout(() => {
+        // Create the heatmap layer using the doctor ratio data
+        let heat = L.heatLayer(heatmapData, {
+            radius: 25,
+            blur: 15,
+            maxZoom: 17,
+            gradient: {
+                0.4: 'blue',
+                0.6: 'lime',
+                0.8: 'red'
+            }
+        }).addTo(doctorRatioLayer);
 
-    
-    doctorRatioLayer.addTo(map);
+        // Add the heatmap layer to the map
+        doctorRatioLayer.addTo(map);
+    }, 500);  // Delay in milliseconds (500ms)
+
 })
 .catch(error => {
     console.error('Error fetching data:', error);
@@ -91,7 +95,7 @@ fetch('/api/v1.0/locations')
 // Layer control for toggling between doctor ratio heatmap and coverage rate
 let overlays = {
     "Doctor Ratio Heatmap": doctorRatioLayer,  // Heatmap for Doctor Ratio
-    "Coverage Rate": coverageLayer           // Coverage Rate circles
+    "Coverage Rate": coverageLayer  // Coverage Rate circles
 };
 
 L.control.layers(null, overlays).addTo(map);
