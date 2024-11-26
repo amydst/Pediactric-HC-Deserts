@@ -23,7 +23,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Create layer groups: one for doctor markers and one for coverage circles
-let doctorCluster = L.MarkerClusterGroup();
+let doctorCluster = L.markerClusterGroup();  // Correct method call here
 let coverageLayer = L.layerGroup().addTo(map);
 
 // Layer control to toggle between doctor markers and coverage circles
@@ -84,4 +84,6 @@ fetch('/api/v1.0/locations')  // Ensure this API endpoint is correct
         createCoverageCircle(location);
     });
 })
-.catch(error => console.error('Error fetching data:', error));
+.catch(error => {
+    console.error('Error fetching data:', error);
+});
