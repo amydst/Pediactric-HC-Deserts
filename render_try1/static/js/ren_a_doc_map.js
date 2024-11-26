@@ -12,11 +12,24 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let doctorRatioLayer = L.layerGroup().addTo(map);  // For heatmap (Doctor Ratio)
 let coverageLayer = L.layerGroup().addTo(map);  // For Coverage Rate
 
+// Create heatmap data array
+let heatmapData = [];
+
 // Layer control for toggling between doctor ratio heatmap and coverage rate
 let overlays = {
-    "Doctor Ratio Heatmap": doctorRatioLayer,  // Heatmap for Doctor Ratio
-    "Coverage Rate": coverageLayer,           // Coverage Rate circles
+    "Doctor Ratio Heatmap": L.heatLayer(heatmapData, {
+        radius: 25,      
+        blur: 15,        
+        maxZoom: 17,     
+        gradient: {      
+            0.4: 'blue',
+            0.6: 'lime',
+            0.8: 'red'
+        }
+    }).addTo(doctorRatioLayer),  
+    "Coverage Rate": coverageLayer,  
 };
+
 L.control.layers(null, overlays).addTo(map);
 
 // Color circles based on coverage rate
@@ -48,21 +61,17 @@ function createCoverageCircle(location) {
     .addTo(coverageLayer);
 }
 
-// Prepare heatmap data for doctor ratio
-let heatmapData = [];
-
-//normalize the doctor-to-child ratio for heatmap intensity
 function getHeatmapIntensity(ratio) {
-    return Math.min(ratio / 10000, 1);  
+    return Math.min(ratio / 10000, 1);
 }
 
-// Create the heatmap data based on children-to-doctor ratio
+// heatmap data based on children-to-doctor ratio
 function createDoctorRatioHeatmap(location) {
     let ratio = location.Children_to_Doctor_Ratio;
     let lat = location.Latitude;
     let lng = location.Longitude;
 
-    // Push the location and ratio (intensity) into the heatmapData array
+   
     heatmapData.push([lat, lng, getHeatmapIntensity(ratio)]);
 }
 
@@ -70,23 +79,13 @@ function createDoctorRatioHeatmap(location) {
 fetch('/api/v1.0/locations')
 .then(response => response.json())
 .then(data => {
-    // Loop through the data and create circles for the coverage rate and heatmap data for doctor ratio
     data.forEach(location => {
         createCoverageCircle(location);  // Create coverage rate circle
         createDoctorRatioHeatmap(location);  // Add data point for doctor ratio heatmap
     });
 
-    // Create the heatmap layer using the doctor ratio data
-    let heat = L.heatLayer(heatmapData, {
-        radius: 25,      
-        blur: 15,        
-        maxZoom: 17,     
-        gradient: {      
-            0.4: 'blue',
-            0.6: 'lime',
-            0.8: 'red'
-        }
-    }).addTo(doctorRatioLayer);  // Add heatmap to the doctor ratio layer
+
+    overlays["Doctor Ratio Heatmap"].setLatLngs(heatmapData);
 })
 .catch(error => {
     console.error('Error fetching data:', error);
