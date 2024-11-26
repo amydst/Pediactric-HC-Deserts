@@ -30,15 +30,15 @@ Base.prepare(autoload_with=engine)
 # Access the 'demographics' table (automatically mapped)
 Demographics = Base.classes.demographics
 
-# Route for the home page (just a welcome message)
+# Route for the home page (displays a welcome message and image)
 @app.route("/")
 def home():
-    return render_template("ren_a_doc_map.html")
+    return render_template("home.html")  # This renders the home page with image and links
 
-# Route for the map page
+# Route for the map page (displays the map)
 @app.route("/map")
 def map_page():
-    return render_template("ren_a_doc_map.html")  # This will load the map page from the templates folder
+    return render_template("map.html")  # This renders the map page, where map will be shown
 
 # API route to return data in JSON format
 @app.route("/api/v1.0/locations")

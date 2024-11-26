@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Healthcare Deserts Project</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url("{{ url_for('static', filename='images/pediatrician.jpg') }}"); /* Background Image */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+
+    a {
+      color: #FFD700;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .content {
+      background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background for readability */
+      padding: 30px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="content">
+    <h1>Welcome to the Group 1 Project!</h1>
+    <p>The Socioeconomic Factors Behind Healthcare Deserts.</p>
+    <p>Visit <a href='/api/v1.0/locations'>/api/v1.0/locations</a> for data in JSON format.</p>
+    <p>Explore our interactive map to see how the different parameters are laid out across California. <a href='/map'>/map</a> to see the map of locations.</p>
+  </div>
+
+</body>
+</html>
