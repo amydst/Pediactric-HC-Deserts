@@ -14,7 +14,7 @@
 
   <!-- Custom CSS -->
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/ren_a_doc_map.css') }}">
-  
+
   <style>
     body, html {
       height: 100%;
@@ -36,9 +36,38 @@
       height: 100%;
       width: 100%;
     }
+
+    /* Styling for welcome message */
+    .welcome-message {
+      text-align: center;
+      color: white;
+      margin-top: 50px;
+      font-size: 24px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.5); /* semi-transparent background for contrast */
+      border-radius: 10px;
+    }
+
+    .welcome-message a {
+      color: #FFD700; /* Gold color for links */
+      text-decoration: none;
+    }
+
+    .welcome-message a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
+  <!-- Welcome Message -->
+  <div class="welcome-message">
+    <h1>Welcome to the Group 1 Project!</h1>
+    <p>The Socioeconomic Factors Behind Healthcare Deserts.</p>
+    <p>Visit <a href='/api/v1.0/locations'>/api/v1.0/locations</a> for data in JSON format.</p>
+    <p>Explore our interactive map to see how the different parameters are laid out across California. <a href='/map'>/map</a> to see the map of locations.</p>
+  </div>
+
+  <!-- Map container -->
   <div id="map"></div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

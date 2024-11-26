@@ -34,12 +34,6 @@ Demographics = Base.classes.demographics
 @app.route("/")
 def home():
     return render_template("ren_a_doc_map.html")
-    return """
-    <h1>Welcome to the Group 1 Project!</h1>
-    <p>The Socioeconomic Factors Behind Healthcare Deserts.</p>
-    <p>Visit <a href='/api/v1.0/locations'>/api/v1.0/locations</a> for data in JSON format.</p>
-    <p>Explore our interactive map to see how the different parameters are laid out across California. <a href='/map'>/map</a> to see the map of locations.</p>
-    """
 
 # Route for the map page
 @app.route("/map")
