@@ -67,7 +67,7 @@ function createCoverageCircle(location) {
 }
 
 // Fetch location data from the API
-fetch('/api/v1.0/locations')  // Make sure this endpoint is correct based on your Flask app
+fetch('/api/v1.0/locations')  // Make sure this endpoint is correct based on Flask app
 .then(response => response.json())
 .then(data => {
     data.forEach(location => {

@@ -46,5 +46,19 @@
 
   <!-- Custom JS for the map -->
   <script src="{{ url_for('static', filename='js/ren_a_doc_map.js') }}"></script>
+
+  <script>
+    // JavaScript to check if the background image is loading
+    var img = new Image();
+    img.onload = function() {
+      console.log("Image loaded successfully!");
+    };
+    img.onerror = function() {
+      console.log("Failed to load image.");
+    };
+    
+    // Set the source of the image to the same background URL
+    img.src = "{{ url_for('static', filename='images/pediatrician.jpg') }}";
+  </script>
 </body>
 </html>
