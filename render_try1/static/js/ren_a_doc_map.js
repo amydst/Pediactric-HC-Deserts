@@ -81,12 +81,11 @@ fetch('/api/v1.0/locations')
                 0.6: 'lime',
                 0.8: 'red'
             }
-        }).addTo(doctorRatioLayer);
+        }).addTo(doctorRatioLayer); // Adding heatmap to the doctorRatioLayer
 
         // Add the heatmap layer to the map
         doctorRatioLayer.addTo(map);
     }, 500);  // Delay in milliseconds (500ms)
-
 })
 .catch(error => {
     console.error('Error fetching data:', error);
@@ -98,4 +97,5 @@ let overlays = {
     "Coverage Rate": coverageLayer  // Coverage Rate circles
 };
 
+// Add layer control to toggle between doctor ratio heatmap and coverage rate
 L.control.layers(null, overlays).addTo(map);
