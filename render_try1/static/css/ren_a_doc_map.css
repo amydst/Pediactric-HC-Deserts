@@ -1,65 +1,64 @@
 body {
-  font-family: Arial, sans-serif;  /* Set font to Arial, sans-serif */
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f4f4f4;  /* Set default background color */
-  background-image: url("/static/images/pediatrician.jpg");  /* Set background image */
-  background-size: cover;  /* Ensure the background image covers the entire page */
-  background-position: center;  /* Center the background image */
-  background-repeat: no-repeat;  /* Prevent repeating the background image */
-  background-attachment: fixed;  /* Fix the background image when scrolling */
-  color: black;  /* Set text color to black for better contrast */
+  background-color: #f4f4f4;
+  color: black;
 }
 
-/* Styling for the main heading (h1) */
-h1 {
-  text-align: center;  /* Center-align the heading */
-  padding: 20px;
-  font-size: 36px;  /* Set a large font size for the heading */
-  color: white;  /* Set text color to white for contrast against the background */
+/* Background image and homepage-specific styles */
+.home-page {
+  background-image: url("/static/images/pediatrician.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: white;
 }
 
-/* Styling for paragraphs */
-p {
-  text-align: center;  /* Center-align the paragraphs */
-  font-size: 18px;  /* Set font size for paragraphs */
-  color: white;  /* Set text color to white */
+.home-page h1, .home-page p {
+  color: white; /* Make sure text is visible on the background */
+}
+
+/* Map page specific styles */
+.map-page {
+  background-image: none; /* Remove background image on the map page */
 }
 
 /* Map container styling */
 #map {
-  width: 100%;  /* Full width */
-  height: 100%;  /* Full height (make sure it fills the viewport) */
+  width: 100%;
+  height: 100vh; /* Full height for the map container */
 }
 
 /* Popup styling for doctor markers */
 .doctor-popup .leaflet-popup-content-wrapper {
-  background-color: #f0f8ff;  /* Light background color for popups */
-  border-radius: 25px;  /* Rounded corners */
-  border: 3px solid #1E90FF;  /* Blue border for the popup */
-  padding: 20px 25px;  /* Padding inside the popup */
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);  /* Subtle shadow for popup */
-  position: relative;  /* Ensure positioning works correctly */
-  max-width: 300px;  /* Limit the maximum width */
-  background: linear-gradient(135deg, #e0f7fa 25%, #f0f8ff 75%);  /* Gradient background */
+  background-color: #f0f8ff;
+  border-radius: 25px;
+  border: 3px solid #1E90FF;
+  padding: 20px 25px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative;
+  max-width: 300px;
+  background: linear-gradient(135deg, #e0f7fa 25%, #f0f8ff 75%);
 }
 
 /* Content inside the popup */
 .doctor-popup .leaflet-popup-content {
-  color: #333;  /* Darker text color inside the popup for readability */
-  font-size: 16px;  /* Font size for popup content */
-  font-weight: bold;  /* Bold font for the content */
-  text-align: center;  /* Center-align the text */
-  margin: 0;  /* Remove any default margin */
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
 }
 
 /* Popup tip (the little arrow) */
 .doctor-popup .leaflet-popup-tip {
-  background-color: #f0f8ff;  /* Same background as the popup */
-  border-top-color: #f0f8ff;  /* Match the background for the arrow */
-  border-width: 16px;  /* Arrow size */
-  position: absolute;  /* Absolute position for the arrow */
-  bottom: -12px;  /* Position it slightly below the popup */
-  left: 50%;  /* Center-align the arrow */
-  transform: translateX(-50%);  /* Ensure the arrow is perfectly centered */
+  background-color: #f0f8ff;
+  border-top-color: #f0f8ff;
+  border-width: 16px;
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
 }

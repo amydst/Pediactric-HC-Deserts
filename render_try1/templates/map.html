@@ -3,24 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pediatrician Map</title>
-
-  <!-- Link to Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
-
-  <!-- Your custom CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/ren_a_doc_map.css') }}">
-
+  <title>Interactive Map</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
-<body>
-
-  <!-- Map container -->
-  <div id="map" style="height: 100vh;"></div> <!-- Set the map height to cover the full viewport height -->
-
-  <!-- Load the JavaScript file -->
+<body class="map-page">
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="{{ url_for('static', filename='js/ren_a_doc_map.js') }}"></script>
-
 </body>
 </html>
