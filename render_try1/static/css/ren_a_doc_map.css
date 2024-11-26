@@ -1,79 +1,45 @@
-/* General Reset for body and html */
 html, body {
-  height: 100%;         /* Ensure the HTML and body take full height */
-  margin: 0;            /* Remove default margin */
-  padding: 0;           /* Remove default padding */
+  height: 100%;         
+  margin: 0;            
+  padding: 0;           
   font-family: Arial, sans-serif;
   color: black;
 }
 
-/* Styles for the homepage (with background image) */
+/* Homepage styles */
 .home-page {
   background-image: url("/static/images/pediatrician.jpg");
-  background-size: cover;  /* Ensure image covers the full screen */
-  background-position: center; /* Center the image */
-  background-repeat: no-repeat; /* Prevent image from repeating */
-  background-attachment: fixed; /* Make the image stay fixed while scrolling */
-  color: white;             /* Text color set to white for readability */
-  height: 100vh;            /* Full viewport height for the homepage */
+  background-size: cover;  
+  background-position: center; 
+  background-repeat: no-repeat; 
+  background-attachment: fixed; 
+  color: white;             
+  height: 100vh;            
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;      /* Vertically and horizontally center content */
+  justify-content: flex-start;  
+  align-items: flex-start;     
+  padding: 20px;            
 }
 
-/* Ensure content on homepage is centered and looks good */
 .home-page h1, .home-page p {
-  color: white;  /* White text for visibility on the image background */
-  text-align: center; /* Center-align text */
+  color: white;  
+  text-align: left; 
 }
 
-/* Map page specific styles */
+/* Map page - no background */
 .map-page {
-  background-image: none; /* No background image for the map page */
+  background-image: none; 
 }
 
-/* Map container styling */
+/* Map takes full screen */
 #map {
-  width: 100vw;        /* Use 100% of the viewport width */
-  height: 100vh;       /* Use 100% of the viewport height */
-  position: absolute;  /* Take the entire viewport space */
+  width: 100vw;        
+  height: 100vh;       
+  position: absolute;  
   top: 0;
   left: 0;
-  z-index: 1;          /* Ensure map is on top */
-  display: block;      /* Ensure the map container is displayed as a block-level element */
-  margin: 0;           /* No margin for the map */
-  padding: 0;          /* No padding */
-}
-
-/* Optional: Style the popup to be more readable */
-.doctor-popup .leaflet-popup-content-wrapper {
-  background-color: #f0f8ff;
-  border-radius: 25px;
-  border: 3px solid #1E90FF;
-  padding: 20px 25px;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-  position: relative;
-  max-width: 300px;
-  background: linear-gradient(135deg, #e0f7fa 25%, #f0f8ff 75%);
-}
-
-/* Content inside the popup */
-.doctor-popup .leaflet-popup-content {
-  color: #333;
-  font-size: 16px;
-  font-weight: bold;
-  text-align: center;
-  margin: 0;
-}
-
-/* Popup tip (the little arrow) */
-.doctor-popup .leaflet-popup-tip {
-  background-color: #f0f8ff;
-  border-top-color: #f0f8ff;
-  border-width: 16px;
-  position: absolute;
-  bottom: -12px;
-  left: 50%;
-  transform: translateX(-50%);
+  z-index: 1;          
+  margin: 0;           
+  padding: 0;          
 }
