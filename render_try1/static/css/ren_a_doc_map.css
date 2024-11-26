@@ -35,12 +35,15 @@ html, body {
 
 /* Map container styling */
 #map {
-  width: 100%;        /* Full width of the viewport */
-  height: 100vh;      /* Full height of the viewport (100% of the visible window) */
-  position: absolute; /* Make sure the map takes up the full space */
+  width: 100vw;        /* Use 100% of the viewport width */
+  height: 100vh;       /* Use 100% of the viewport height */
+  position: absolute;  /* Take the entire viewport space */
   top: 0;
   left: 0;
-  z-index: 1;         /* Make sure map is above other elements */
+  z-index: 1;          /* Ensure map is on top */
+  display: block;      /* Ensure the map container is displayed as a block-level element */
+  margin: 0;           /* No margin for the map */
+  padding: 0;          /* No padding */
 }
 
 /* Optional: Style the popup to be more readable */
