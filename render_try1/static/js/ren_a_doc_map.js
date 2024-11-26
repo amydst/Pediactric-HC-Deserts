@@ -14,7 +14,7 @@ function createDoctorIcon() {
 // Initialize the map centered on California
 let map = L.map('map', {
     center: [36.7783, -119.4179],  // Coordinates for California
-    zoom: 6  // Initial zoom level
+    zoom: 6
 });
 
 // Add OpenStreetMap tiles to the map
@@ -23,8 +23,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Create layer groups: one for doctor markers and one for coverage circles
-let doctorCluster = L.markerClusterGroup();  // Correct method call here
-let coverageLayer = L.layerGroup().addTo(map);
+let doctorCluster = L.markerClusterGroup();  // Create cluster for doctor markers
+let coverageLayer = L.layerGroup().addTo(map);  // Create layer for coverage circles
 
 // Layer control to toggle between doctor markers and coverage circles
 let overlays = {
@@ -50,35 +50,33 @@ function getRadius(coverageRate) {
 
 // Function to create the coverage circle on the map
 function createCoverageCircle(location) {
-    let coverageRate = location.Coverage_Rate;  // Get the coverage rate from the location data
+    let coverageRate = location.coverageRate;  // Get the coverage rate from the location data
 
-    L.circle([location.Latitude, location.Longitude], {
-        color: getColor(coverageRate),  // Set the border color based on coverage rate
-        fillColor: getColor(coverageRate),  // Set the fill color based on coverage rate
-        fillOpacity: 0.6,  // Set the opacity of the circle
-        weight: 0,  // Set the border weight to 0 (no visible border)
-        radius: getRadius(coverageRate)  // Set the radius based on coverage rate
+    L.circle([location.latitude, location.longitude], {
+        color: getColor(coverageRate),  
+        fillColor: getColor(coverageRate),  
+        fillOpacity: 0.6,  
+        weight: 0, 
+        radius: getRadius(coverageRate)
     })
-    .bindPopup('<b>Coverage Rate: ' + coverageRate.toFixed(2) + '%</b>')  // Popup with the coverage rate
-    .addTo(coverageLayer);  // Add the circle to the coverage layer
+    .bindPopup('<b>Coverage Rate: ' + coverageRate.toFixed(2) + '%</b>')
+    .addTo(coverageLayer);
 }
 
 // Fetch location data from the API
-fetch('/api/v1.0/locations')  // Ensure this API endpoint is correct
+fetch('/api/v1.0/locations') 
 .then(response => response.json())
 .then(data => {
     data.forEach(location => {
-        // Only create a doctor marker if there is a positive number of doctors
-        let countOfDoctors = location.Count_of_Licensees || 0;
+        // Get the children-to-doctor ratio
+        let childrenToDoctorRatio = location.childrenToDoctorRatio || 0;
 
-        if (countOfDoctors > 0) {
-            // Create a marker for the doctor at the given latitude and longitude
-            L.marker([location.Latitude, location.Longitude], {
-                icon: createDoctorIcon()  // Use the custom doctor icon
-            })
-            .bindPopup('<b>Doctors Count: ' + countOfDoctors + '</b>')  // Popup with the number of doctors
-            .addTo(doctorCluster);  // Add the doctor marker to the doctor cluster
-        }
+        // Create a marker for the doctor at the given latitude and longitude
+        L.marker([location.latitude, location.longitude], {
+            icon: createDoctorIcon()  //doctor icon
+        })
+        .bindPopup('<b>Children to Doctor Ratio: ' + childrenToDoctorRatio.toFixed(2) + '</b>')  // Popup with the ratio
+        .addTo(doctorCluster);  // Add the doctor marker to the doctor cluster
 
         // Create the coverage circle for each location
         createCoverageCircle(location);

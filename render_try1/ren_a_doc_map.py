@@ -7,7 +7,7 @@ import os
 
 app = Flask(__name__)
 
-# Enable CORS for all origins (only for development or specific cases)
+# Enable CORS for more ports
 CORS(app)
 
 # Get the DATABASE_URL environment variable set by Render
@@ -16,7 +16,7 @@ database_url = os.getenv("DATABASE_URL")
 
 # Check if the DATABASE_URL is available, if not raise an error
 if not database_url:
-    raise ValueError("DATABASE_URL environment variable is not set. Please check the configuration.")
+    raise ValueError("DATABASE_URL environment variable is not set.")
 
 # Connect to the PostgreSQL database using the URL from the environment variable
 engine = create_engine(database_url)
@@ -29,6 +29,8 @@ Base.prepare(autoload_with=engine)
 
 # Access the 'demographics' table (automatically mapped)
 Demographics = Base.classes.demographics
+# same for population table:
+Population = Base.classes.population
 
 # Route for the home page (displays a welcome message and image)
 @app.route("/")
@@ -48,26 +50,33 @@ def get_locations():
     session = Session()
 
     try:
-        # Query the 'demographics' table to get latitude, longitude, doctor count, and coverage rate
+        # Query to get data from both demographics and population tables
         results = session.query(
             Demographics.latitude,
             Demographics.longitude,
             Demographics.count_of_licensees,
-            Demographics.coverage_rate 
+            Demographics.coverage_rate,
+            Demographics.zip_code,
+            Population.population_under_18_years
+        ).join(
+            Population, Demographics.zip_code == Population.zip_code
         ).filter(
-            Demographics.coverage_rate != None,  # Exclude rows with None in coverage_rate
-            Demographics.coverage_rate != 0,     # Exclude rows where coverage_rate is 0
-            Demographics.count_of_licensees > 0 # Exclude rows where doctor count is 0
-        ).all()  # Apply the filters
-
+            Demographics.coverage_rate != None,  # - coverage_rate is none
+            Demographics.coverage_rate != 0,     # - coverage_rate is 0
+            Demographics.count_of_licensees > 0 # - doctor count is 0
+        ).all()
         locations = []
-        # Loop through the results and structure the data as needed
-        for latitude, longitude, count_of_licensees, coverage_rate in results:
+        for latitude, longitude, count_of_licensees, coverage_rate, zip_code, population_under_18_years in results:
+            if count_of_licensees > 0:
+                children_to_doctor_ratio = population_under_18_years / count_of_licensees
+            else:
+                children_to_doctor_ratio = 0  # Not division by 0
+
             locations.append({
                 "Latitude": latitude,
                 "Longitude": longitude,
-                "Count_of_Licensees": count_of_licensees,
-                "Coverage_Rate": coverage_rate  # Add coverage_rate to the result
+                "Children_to_Doctor_Ratio": children_to_doctor_ratio,
+                "Coverage_Rate": coverage_rate
             })
 
         # Return the data as JSON
@@ -82,5 +91,5 @@ def get_locations():
         session.close()
 
 if __name__ == "__main__":
-    # In production, do not set debug to True.
+    
     app.run(debug=False, host='0.0.0.0', port=10000)
