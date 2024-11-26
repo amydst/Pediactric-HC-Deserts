@@ -12,6 +12,7 @@ CORS(app)
 
 # Get the DATABASE_URL environment variable set by Render
 database_url = os.getenv("DATABASE_URL")
+# database_url = "postgresql://alex:5ZsVuAhs533DtUbfOOw8hVl1daKSyuIr@dpg-ct202f56l47c73bj3l50-a.oregon-postgres.render.com/healthcare_deserts_schema"
 
 # Check if the DATABASE_URL is available, if not raise an error
 if not database_url:
@@ -32,6 +33,7 @@ Demographics = Base.classes.demographics
 # Route for the home page (just a welcome message)
 @app.route("/")
 def home():
+    return render_template("ren_a_doc_map.html")
     return """
     <h1>Welcome to the Group 1 Project!</h1>
     <p>The Socioeconomic Factors Behind Healthcare Deserts.</p>
