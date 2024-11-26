@@ -23,7 +23,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Create layer groups: one for doctor markers and one for coverage circles
-let doctorCluster = L.markerClusterGroup();
+let doctorCluster = L.MarkerClusterGroup();
 let coverageLayer = L.layerGroup().addTo(map);
 
 // Layer control to toggle between doctor markers and coverage circles
