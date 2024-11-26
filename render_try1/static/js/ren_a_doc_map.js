@@ -51,9 +51,9 @@ function createCoverageCircle(location) {
 // Prepare heatmap data for doctor ratio
 let heatmapData = [];
 
-// Function to normalize the doctor-to-child ratio for heatmap intensity
+//normalize the doctor-to-child ratio for heatmap intensity
 function getHeatmapIntensity(ratio) {
-    return Math.min(ratio / 10000, 1);  // Normalize ratio to a max of 1
+    return Math.min(ratio / 10000, 1);  
 }
 
 // Create the heatmap data based on children-to-doctor ratio
@@ -62,7 +62,7 @@ function createDoctorRatioHeatmap(location) {
     let lat = location.Latitude;
     let lng = location.Longitude;
 
-
+    // Push the location and ratio (intensity) into the heatmapData array
     heatmapData.push([lat, lng, getHeatmapIntensity(ratio)]);
 }
 
@@ -78,10 +78,15 @@ fetch('/api/v1.0/locations')
 
     // Create the heatmap layer using the doctor ratio data
     let heat = L.heatLayer(heatmapData, {
-        radius: 25,
-        blur: 15,    // Blurring effect
-        maxZoom: 17  
-    }).addTo(doctorRatioLayer);
+        radius: 25,      
+        blur: 15,        
+        maxZoom: 17,     
+        gradient: {      
+            0.4: 'blue',
+            0.6: 'lime',
+            0.8: 'red'
+        }
+    }).addTo(doctorRatioLayer);  // Add heatmap to the doctor ratio layer
 })
 .catch(error => {
     console.error('Error fetching data:', error);
