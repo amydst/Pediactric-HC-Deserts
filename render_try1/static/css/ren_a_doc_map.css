@@ -7,7 +7,7 @@ html, body {
   color: black;
 }
 
-/* Page Styles for the Homepage */
+/* Styles for the homepage (with background image) */
 .home-page {
   background-image: url("/static/images/pediatrician.jpg");
   background-size: cover;  /* Ensure image covers the full screen */
@@ -28,18 +28,22 @@ html, body {
   text-align: center; /* Center-align text */
 }
 
-/* Map Page Specific Styles */
+/* Map page specific styles */
 .map-page {
-  background-image: none; /* No background on the map page */
+  background-image: none; /* No background image for the map page */
 }
 
-/* Ensure the map container takes up the full viewport height */
+/* Map container styling */
 #map {
   width: 100%;        /* Full width of the viewport */
   height: 100vh;      /* Full height of the viewport (100% of the visible window) */
+  position: absolute; /* Make sure the map takes up the full space */
+  top: 0;
+  left: 0;
+  z-index: 1;         /* Make sure map is above other elements */
 }
 
-/* Styling for doctor popup */
+/* Optional: Style the popup to be more readable */
 .doctor-popup .leaflet-popup-content-wrapper {
   background-color: #f0f8ff;
   border-radius: 25px;
