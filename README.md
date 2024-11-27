@@ -15,9 +15,8 @@ References for any code used that is not your own
 
 
 ### **Project Overview:** 
-    Are there any pediatric care deserts in California? Where are they, and what socioeconomic factors contribute to this phenomenon?
-
-    ==WE NEED TO EXPAND ON THIS, INCLUDE SOME BACKGROUND RESEARCH AND THE PURPOSE==
+Are there any pediatric care deserts in California? Where are they, and what socioeconomic factors contribute to this phenomenon?
+==WE NEED TO EXPAND ON THIS, INCLUDE SOME BACKGROUND RESEARCH AND THE PURPOSE==
 
 ### **Definitions:**
 **-Pediatric care desert:** There are several ways this can be defined, for this analysis we are using the ratio of children per pediatrician of 1,200:1. We decided on this based on a review of several research papers reviewed.^1^
