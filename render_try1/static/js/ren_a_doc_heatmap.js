@@ -23,10 +23,10 @@ fetch('/api/v1.0/locations')
             let lng = location.Longitude;
             let ratio = location.Children_to_Doctor_Ratio;
 
-            minRatio = Math.min(minRatio, ratio);
-            maxRatio = Math.max(maxRatio, ratio);
+            minRatio = Math.min(minRatio, ratio);  // Find minimum ratio
+            maxRatio = Math.max(maxRatio, ratio);  // Find maximum ratio
 
-            heatmapData.push([lat, lng, ratio]);
+            heatmapData.push([lat, lng, ratio]);  
         });
 
         createHeatmap(heatmapData, minRatio, maxRatio);
@@ -37,10 +37,19 @@ fetch('/api/v1.0/locations')
 
 // Function to create the heatmap using leaflet-heat:
 function createHeatmap(data, minRatio, maxRatio) {
-    // Normalize the ratio to a scale of 0 to 1
-    function normalize(ratio) {
-        return (ratio - minRatio) / (maxRatio - minRatio);
+    function normalize(ratio) {       
+        return Math.min((ratio - minRatio) / (maxRatio - minRatio), 1);
     }
+
+    // Define the custom gradient
+    const gradient = {
+        0.0: 'green',        
+        0.2: 'lightgreen',  
+        0.4: 'yellow',       
+        0.6: 'orange',       
+        0.8: 'red',          
+        1.0: 'darkred'       
+    };
 
     // Create the heatmap layer
     heatLayer = L.heatLayer(data.map(point => {
@@ -48,22 +57,15 @@ function createHeatmap(data, minRatio, maxRatio) {
         let lng = point[1];
         let ratio = point[2];
 
-        let normalizedRatio = normalize(ratio); // Normalize the ratio
+        let normalizedRatio = normalize(ratio);  // Normalize the ratio and clamp it
 
-        return [lat, lng, normalizedRatio];  // We are using normalized ratio for intensity
+        return [lat, lng, normalizedRatio];  // Return [lat, lng, intensity]
     }), {
-        radius: 30,        
-        blur: 4,           
-        maxZoom: 13,
-        minOpacity: 0.3,   
-        gradient: {        
-            0.0: 'darkgreen',
-            0.2: 'green',
-            0.4: 'lightgreen',
-            0.6: 'yellow',
-            0.8: 'orange',
-            1.0: 'red'
-        }
+        radius: 50,        // Radius for each heatmap point (larger for better visibility)
+        blur: 10,          // Smoothing out the heatmap for better transitions
+        maxZoom: 13,       // Max zoom for heatmap layer
+        minOpacity: 0.3,   // Set opacity to make heatmap less transparent
+        gradient: gradient // Apply the custom gradient
     });
 
     // Add the heatLayer to the map
@@ -87,7 +89,7 @@ function createHeatmap(data, minRatio, maxRatio) {
         let latLng = event.latlng;
         let nearestPoint = findNearestPoint(latLng, data);
         if (nearestPoint) {
-            let ratio = nearestPoint[2]; 
+            let ratio = nearestPoint[2];
             // Round the ratio to the nearest whole number
             let roundedRatio = Math.round(ratio);
             let popupContent = `Children to Doctor Ratio: ${roundedRatio}`;
