@@ -12,7 +12,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let heatmapData = [];
 let minRatio = Infinity;
 let maxRatio = -Infinity;
-let heatLayer;  
+let heatLayer;  // Declare heatLayer outside to make it accessible for layers control
 
 // Fetch the data from the API
 fetch('/api/v1.0/locations')
@@ -37,20 +37,18 @@ fetch('/api/v1.0/locations')
 
 // Function to create the heatmap using leaflet-heat:
 function createHeatmap(data, minRatio, maxRatio) {
-   
-    function normalize(ratio) {
-  
-        return Math.min(Math.log(ratio + 1) / Math.log(maxRatio + 1), 1); 
+    function normalize(ratio) {       
+        return Math.min((ratio - minRatio) / (maxRatio - minRatio), 1);
     }
 
-   
+    // Define the custom gradient
     const gradient = {
-        0.0: 'darkgreen',    
-        0.2: 'green',        
-        0.4: 'lightgreen',   
+        0.0: 'darkgreen',        
+        0.2: 'green',  
+        0.4: 'lightgreen',  
         0.6: 'yellow',       
         0.8: 'orange',       
-        1.0: 'red'           
+        1.0: 'red'      
     };
 
     // Create the heatmap layer
@@ -61,13 +59,14 @@ function createHeatmap(data, minRatio, maxRatio) {
 
         let normalizedRatio = normalize(ratio);  
 
-        return [lat, lng, normalizedRatio];  
+        // Return each point with adjusted intensity based on ratio
+        return [lat, lng, normalizedRatio];  // Return [lat, lng, intensity]
     }), {
-        radius: 20,        
-        blur: 5,         
+        radius: 40,        
+        blur: 10,         
         maxZoom: 13,      
         minOpacity: 0.3,   
-        gradient: gradient 
+        gradient: gradient
     });
 
     // Add the heatLayer to the map
