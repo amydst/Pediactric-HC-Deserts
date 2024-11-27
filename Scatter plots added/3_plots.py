@@ -77,14 +77,15 @@ def get_demographics():
             Demographics.poverty_rate,
             Demographics.family_median_income,
             Demographics.coverage_rate,
-            Population.population_under_18_years
+            Population.population_under_18_years,
+            Population.population_density_per_sq_mile
             
             ).join(Population, Demographics.zip_code == Population.zip_code).all()
 
         data = []
         
         # Loop through the results and structure the data as needed
-        for zip_code, doctor_count, poverty_rate, income, insurance,kids  in query_demographics:
+        for zip_code, doctor_count, poverty_rate, income, insurance, kids, density  in query_demographics:
             # Calculate the ratio of population under 18 to doctor count
             if doctor_count is not None and doctor_count > 0:
                 kids_per_doctor = kids / doctor_count
@@ -98,6 +99,7 @@ def get_demographics():
                 "family_median_income": income,
                 "insurance_coverage_rate":insurance,
                 "population_under_18":kids,
+                "population_density": density,
                 "kids_per_doctor":kids_per_doctor
             })
 
