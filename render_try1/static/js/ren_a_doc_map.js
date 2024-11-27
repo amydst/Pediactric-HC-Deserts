@@ -8,9 +8,9 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-// Create layer groups
-let coverageLayer = L.layerGroup();
-let heatmapLayer = L.layerGroup();
+// Create layer groups for coverage and heatmap
+let coverageLayer = L.layerGroup().addTo(map);
+let heatmapLayer = L.layerGroup().addTo(map);
 
 let pointsData = [];
 let minRatio = Infinity;
@@ -25,17 +25,19 @@ fetch('/api/v1.0/locations')
             let lng = location.Longitude;
             let ratio = location.Children_to_Doctor_Ratio;
 
+            // Update min/max ratio for normalization
+            minRatio = Math.min(minRatio, ratio);
+            maxRatio = Math.max(maxRatio, ratio);
+
+            // Add point data
             pointsData.push({ lat, lng, ratio });
 
-
+            // Create coverage circle
             createCoverageCircle(location);
         });
 
+        // Plot heatmap points after all data is loaded
         plotHeatmapPoints(pointsData, minRatio, maxRatio);
-
-        // Add layers to the map
-        coverageLayer.addTo(map);
-        heatmapLayer.addTo(map);
     })
     .catch(error => {
         console.error('Error fetching data:', error);
@@ -74,6 +76,7 @@ function normalize(ratio, minRatio, maxRatio) {
     return (ratio - minRatio) / (maxRatio - minRatio);
 }
 
+// Function to get the heatmap color
 function getHeatmapColor(ratio, minRatio, maxRatio) {
     const normalized = normalize(ratio, minRatio, maxRatio);
     const colorScale = d3.scaleLinear()
@@ -83,7 +86,7 @@ function getHeatmapColor(ratio, minRatio, maxRatio) {
     return colorScale(normalized);
 }
 
-// heatmap points
+// Function to plot heatmap points
 function plotHeatmapPoints(data, minRatio, maxRatio) {
     data.forEach(point => {
         let lat = point.lat;
