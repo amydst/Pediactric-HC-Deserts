@@ -69,7 +69,9 @@ function createHeatmap(data, minRatio, maxRatio) {
         let nearestPoint = findNearestPoint(latLng, data);
         if (nearestPoint) {
             let ratio = nearestPoint[2]; 
-            let popupContent = `Children to Doctor Ratio: ${ratio}`;
+            // Round the ratio to the nearest whole number
+            let roundedRatio = Math.round(ratio);
+            let popupContent = `Children to Doctor Ratio: ${roundedRatio}`;
             L.popup()
                 .setLatLng(latLng)
                 .setContent(popupContent)
