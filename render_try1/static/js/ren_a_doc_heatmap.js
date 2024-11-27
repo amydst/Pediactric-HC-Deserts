@@ -42,7 +42,7 @@ function createHeatmap(data, minRatio, maxRatio) {
         return (ratio - minRatio) / (maxRatio - minRatio);
     }
 
-    // color function based on normalized value
+    // color function based on normalized value (for debugging)
     function getColor(normalizedRatio) {
         console.log('Normalized Ratio:', normalizedRatio); 
         if (normalizedRatio <= 0.1) {
@@ -79,13 +79,13 @@ function createHeatmap(data, minRatio, maxRatio) {
         let normalizedRatio = normalize(ratio);
         console.log('Normalized Ratio:', normalizedRatio);
 
-        let color = getColor(normalizedRatio);  
-
-        return [lat, lng, normalizedRatio]; 
+        
+        return [lat, lng, normalizedRatio];  
     }), {
-        radius: 25,        
-        blur: 20,          
-        maxZoom: 13
+        radius: 30,        
+        blur: 15,          
+        maxZoom: 13,
+        minOpacity: 0.2,   // Set opacity to make heatmap less transparent
     });
 
     // Add the heatLayer to the map
