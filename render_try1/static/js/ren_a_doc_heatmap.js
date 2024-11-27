@@ -42,49 +42,28 @@ function createHeatmap(data, minRatio, maxRatio) {
         return (ratio - minRatio) / (maxRatio - minRatio);
     }
 
-    // color function based on normalized value (for debugging)
-    function getColor(normalizedRatio) {
-        console.log('Normalized Ratio:', normalizedRatio); 
-        if (normalizedRatio <= 0.1) {
-            console.log('Assigned Color: darkgreen');  
-            return 'darkgreen';
-        } else if (normalizedRatio <= 0.2) {
-            console.log('Assigned Color: green');  
-            return 'green';
-        } else if (normalizedRatio <= 0.4) {
-            console.log('Assigned Color: lightgreen'); 
-            return 'lightgreen';
-        } else if (normalizedRatio <= 0.6) {
-            console.log('Assigned Color: yellow');  
-            return 'yellow';
-        } else if (normalizedRatio <= 0.8) {
-            console.log('Assigned Color: orange'); 
-            return 'orange';
-        } else {
-            console.log('Assigned Color: red');  
-            return 'red'; // For ratios above 0.8
-        }
-    }
-
-  
-   // console.log("Min Ratio: ", minRatio);
-   // console.log("Max Ratio: ", maxRatio);
-
     // Create the heatmap layer
     heatLayer = L.heatLayer(data.map(point => {
         let lat = point[0];
         let lng = point[1];
         let ratio = point[2];
 
-        let normalizedRatio = normalize(ratio);
-        console.log('Normalized Ratio:', normalizedRatio);
+        let normalizedRatio = normalize(ratio); // Normalize the ratio
 
-        return [lat, lng, normalizedRatio];  
+        return [lat, lng, normalizedRatio];  // We are using normalized ratio for intensity
     }), {
-        radius: 50,        
-        blur: 6,          
+        radius: 30,        
+        blur: 4,           
         maxZoom: 13,
         minOpacity: 0.3,   
+        gradient: {        
+            0.0: 'darkgreen',
+            0.2: 'green',
+            0.4: 'lightgreen',
+            0.6: 'yellow',
+            0.8: 'orange',
+            1.0: 'red'
+        }
     });
 
     // Add the heatLayer to the map
