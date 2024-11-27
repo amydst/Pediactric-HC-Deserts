@@ -12,6 +12,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let heatmapData = [];
 let minRatio = Infinity;
 let maxRatio = -Infinity;
+let heatLayer;  // Declare heatLayer outside to make it accessible for layers control
 
 // Fetch the data from the API
 fetch('/api/v1.0/locations')
@@ -22,17 +23,12 @@ fetch('/api/v1.0/locations')
             let lng = location.Longitude;
             let ratio = location.Children_to_Doctor_Ratio;
 
-            //console.log('Ratio:', ratio); 
-
-            
             minRatio = Math.min(minRatio, ratio);
             maxRatio = Math.max(maxRatio, ratio);
 
-            
             heatmapData.push([lat, lng, ratio]);
         });
 
-       
         createHeatmap(heatmapData, minRatio, maxRatio);
     })
     .catch(error => {
@@ -75,26 +71,38 @@ function createHeatmap(data, minRatio, maxRatio) {
     console.log("Max Ratio: ", maxRatio);
 
     // Create the heatmap layer
-    let heatLayer = L.heatLayer(data.map(point => {
+    heatLayer = L.heatLayer(data.map(point => {
         let lat = point[0];
         let lng = point[1];
         let ratio = point[2];
 
-     
         let normalizedRatio = normalize(ratio);
-
         console.log('Normalized Ratio:', normalizedRatio);
 
-   
         let color = getColor(normalizedRatio);  
 
-       
         return [lat, lng, normalizedRatio]; 
     }), {
         radius: 25,        
         blur: 20,          
         maxZoom: 13
-    }).addTo(map);
+    });
+
+    // Add the heatLayer to the map
+    heatLayer.addTo(map);
+
+    // Control to toggle the heatmap layer on/off
+    let baseMaps = {
+        "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        })
+    };
+
+    let overlayMaps = {
+        "Heatmap": heatLayer
+    };
+
+    L.control.layers(baseMaps, overlayMaps).addTo(map);
 
     // Add popup on map click to show the ratio
     map.on('click', function(event) {
