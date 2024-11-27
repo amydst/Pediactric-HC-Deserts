@@ -39,14 +39,20 @@ fetch('/api/v1.0/locations')
 
 // Create the heatmap using leaflet-heat:
 function createHeatmap(data, minRatio, maxRatio) {
-    // Define a more granular gradient with multiple shades of green, yellow, orange, and red
+    // Define a more granular gradient with 12 shades
     let gradient = {
-        0.0: 'darkgreen',      // Very low ratio (few children per doctor)
-        0.2: 'green',          // Low ratio (fewer children per doctor)
-        0.4: 'lightgreen',     // Slightly lower ratio
-        0.6: 'yellow',         // Medium ratio
-        0.8: 'orange',         // High ratio (many children per doctor)
-        1.0: 'red'             // Very high ratio (many more children per doctor)
+        0.0: 'darkgreen',    // Very low ratio (few children per doctor)
+        0.08: 'green',       // Low ratio
+        0.16: 'lightgreen',  // Low-medium ratio
+        0.24: 'yellowgreen', // Medium-low ratio
+        0.32: 'yellow',      // Medium ratio
+        0.40: 'lightyellow', // Medium-high ratio
+        0.48: 'orange',      // High ratio
+        0.56: 'darkorange',  // Higher ratio
+        0.64: 'red',         // Very high ratio
+        0.72: 'darkred',     // Extremely high ratio
+        0.80: 'brown',       // Highest ratio
+        1.0: 'black'         // Maximal ratio
     };
 
     // Create heatmap layer
@@ -96,12 +102,14 @@ function addLegend(minRatio, maxRatio) {
 
     legend.onAdd = function(map) {
         let div = L.DomUtil.create('div', 'info legend');
-        // Define the range values for the legend
-        let grades = [minRatio, (maxRatio - minRatio) * 0.2, (maxRatio - minRatio) * 0.4, (maxRatio - minRatio) * 0.6, (maxRatio - minRatio) * 0.8, maxRatio];
+        
+        // Define the grades and colors for the legend
+        let grades = [minRatio, (maxRatio - minRatio) * 0.08, (maxRatio - minRatio) * 0.16, (maxRatio - minRatio) * 0.24, (maxRatio - minRatio) * 0.32, (maxRatio - minRatio) * 0.40, 
+                      (maxRatio - minRatio) * 0.48, (maxRatio - minRatio) * 0.56, (maxRatio - minRatio) * 0.64, (maxRatio - minRatio) * 0.72, (maxRatio - minRatio) * 0.80, maxRatio];
         let labels = [];
-        let colors = ['darkgreen', 'green', 'lightgreen', 'yellow', 'orange', 'red'];
+        let colors = ['darkgreen', 'green', 'lightgreen', 'yellowgreen', 'yellow', 'lightyellow', 'orange', 'darkorange', 'red', 'darkred', 'brown', 'black'];
 
-        // Go through each range and make a label with a colored box for each range
+        // Generate the labels with a colored box for each range
         for (let i = 0; i < grades.length; i++) {
             labels.push(
                 '<i style="background:' + colors[i] + '"></i> ' +
