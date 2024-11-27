@@ -20,10 +20,6 @@ fetch('http://127.0.0.1:5000/api/v1.0/demographics')  // URL of the Flask API
   let median_income = filteredData.map(item => item.family_median_income);
   let population_density = filteredData.map(item => item.population_density);
 
-  // let poverty_rate = data.map(item => item.poverty_rate);
-  // let kids_per_doctor = data.map(item => item.kids_per_doctor)
-  // let zip_code = data.map(item => item.zip_code)
-
   init();
 
   function init(){
@@ -75,7 +71,7 @@ fetch('http://127.0.0.1:5000/api/v1.0/demographics')  // URL of the Flask API
     // Return slope, intercept, r-squared and pValue
     return {slope, intercept, r, rSquared, pValue};
   }
-
+//--------DRAW POVERTY RATE--------\\
   function drawPovertyRate() {
     let x = poverty_rate;
     let y = kids_per_doctor;
@@ -90,11 +86,11 @@ fetch('http://127.0.0.1:5000/api/v1.0/demographics')  // URL of the Flask API
       textposition: 'top center',
       hoverinfo: 'text',
       marker: {
-        size: 6,
+        size: 10,
         color: 'violet',
         line: {
           color: 'deeppink',
-          width: 2
+          width: 1
         }
       }
     };
@@ -106,7 +102,7 @@ fetch('http://127.0.0.1:5000/api/v1.0/demographics')  // URL of the Flask API
     let regressionLine = x.map(xVal => slope * xVal + intercept);
 
     let line_trace = {
-      x:poverty_rate,
+      x:x,
       y:regressionLine,
       mode: 'lines',
       type:'scatter',
@@ -128,85 +124,136 @@ fetch('http://127.0.0.1:5000/api/v1.0/demographics')  // URL of the Flask API
     console.log(`R-squared: ${rSquared}`);
     console.log(`p-value: ${pValue}`);
 
-    document.getElementById('rSquared').textContent = `R-squared: ${rSquared.toFixed(4)}`;
-    document.getElementById('pValue').textContent = `p-value: ${pValue.toExponential(3)}`;
+    document.getElementById('rSquared').textContent = `R-squared: ${rSquared.toFixed(5)}`;
+    document.getElementById('pValue').textContent = `p-value: ${pValue.toFixed(15)}`;
     
   };
-
+//--------DRAW COVERAGE RATE--------\\
   function drawCoverageRate() {
+    let x = coverage_rate;
+    let y = kids_per_doctor;
     let coverage_trace = {
-      x: coverage_rate,
-      y: kids_per_doctor,
+      x: x,
+      y: y,
       text: zip_code,
       mode: 'markers',
       type: 'scatter',
+      name:'Zip codes',
       textposition: 'top center',
       hoverinfo: 'text',
       marker: {
-        size: 6,
+        size: 10,
         color: 'blue',
         line: {
           color: 'lightblue',
-          width: 2
+          width: 1
         }
       }
     };
+    // Calculate the regression line
+    let { slope, intercept, r, rSquared,pValue } = linearRegression(x, y);
 
+    // Generate y-values for the regression line
+    let regressionLine = x.map(xVal => slope * xVal + intercept);
+    let line_trace = {
+      x:x,
+      y:regressionLine,
+      mode: 'lines',
+      type:'scatter',
+      name: 'Regression Line',
+      line:{
+        color:'indigo'
+      },
+      hoverinfo: 'none',
+    }
     let coverage_layout = {
       title: "Insurance Coverage vs Kids per Doctor",
       xaxis: { title: 'Insurance Coverage Rate' },
       yaxis: { title: 'Kids per Doctor' }
     };
 
-    Plotly.newPlot("plot", [coverage_trace], coverage_layout);
-  }
+    Plotly.newPlot("plot", [coverage_trace,line_trace], coverage_layout);
 
+    console.log(`R-squared: ${rSquared}`);
+    console.log(`p-value: ${pValue}`);
+
+    document.getElementById('rSquared').textContent = `R-squared: ${rSquared.toFixed(5)}`;
+    document.getElementById('pValue').textContent = `p-value: ${pValue.toFixed(15)}`;
+  }
+//--------DRAW MEDIAN INCOME--------\\
   function drawMedianIncome() {
+    let x = median_income;
+    let y = kids_per_doctor;
     let income_trace = {
-      x: median_income,
-      y: kids_per_doctor,
+      x: x,
+      y: y,
       text: zip_code,
       mode: 'markers',
       type: 'scatter',
+      name:'Zip codes',
       textposition: 'top center',
       hoverinfo: 'text',
       marker: {
-        size: 6,
-        color: 'green',
+        size: 10,
+        color: 'limegreen',
         line: {
           color: 'darkgreen',
-          width: 2
+          width: 1
         }
       }
     };
+    // Calculate the regression line
+    let { slope, intercept, r, rSquared,pValue } = linearRegression(x, y);
 
+    // Generate y-values for the regression line
+    let regressionLine = x.map(xVal => slope * xVal + intercept);
+    let line_trace = {
+      x:x,
+      y:regressionLine,
+      mode: 'lines',
+      type:'scatter',
+      name: 'Regression Line',
+      line:{
+        color:'black'
+      },
+      hoverinfo: 'none',
+    }
     let income_layout = {
       title: "Median Income vs Kids per Doctor",
       xaxis: { title: 'Median Income' },
       yaxis: { title: 'Kids per Doctor' }
     };
 
-    Plotly.newPlot("plot", [income_trace], income_layout);
+    Plotly.newPlot("plot", [income_trace,line_trace], income_layout);
   }
-
+//--------DRAW POPULATION DENSITY--------\\
   function drawPopulationDensity() {
+    let x = population_density;
+    let y = kids_per_doctor;
+
     let density_trace = {
-      x: population_density,
-      y: kids_per_doctor,
+      x: x,
+      y: y,
       text: zip_code,
       mode: 'markers',
       type: 'scatter',
+      name: 'Zip codes',
       textposition: 'top center',
       hoverinfo: 'text',
       marker: {
-        size: 6,
-        color: 'saddlebrown',
+        size: 10,
+        color: 'dimgray',
         line: {
-          color: 'peru',
-          width: 2
+          color: 'silver',
+          width: 1
         }
       }
     };
+    // Calculate the regression line
+    let { slope, intercept, r, rSquared,pValue } = linearRegression(x, y);
+
+    // Generate y-values for the regression line
+    let regressionLine = x.map(xVal => slope * xVal + intercept);
 
     let density_layout = {
       title: "Population density vs Kids per Doctor",
@@ -214,7 +261,24 @@ fetch('http://127.0.0.1:5000/api/v1.0/demographics')  // URL of the Flask API
       yaxis: { title: 'Kids per Doctor' }
     };
 
-    Plotly.newPlot("plot", [density_trace], density_layout);
+    let line_trace = {
+      x:x,
+      y:regressionLine,
+      mode: 'lines',
+      type:'scatter',
+      name: 'Regression Line',
+      line:{
+        color:'black'
+      },
+      hoverinfo: 'none',
+    }
+    Plotly.newPlot("plot", [density_trace,line_trace], density_layout);
+
+    console.log(`R-squared: ${rSquared}`);
+    console.log(`p-value: ${pValue}`);
+
+    document.getElementById('rSquared').textContent = `R-squared: ${rSquared.toFixed(5)}`;
+    document.getElementById('pValue').textContent = `p-value: ${pValue.toFixed(15)}`;
   }
 
   // Event listener for dropdown menu
