@@ -37,18 +37,20 @@ fetch('/api/v1.0/locations')
 
 // Function to create the heatmap using leaflet-heat:
 function createHeatmap(data, minRatio, maxRatio) {
-    function normalize(ratio) {       
+    // Normalize the ratio to a scale of 0 to 1, but clamp values above a threshold
+    function normalize(ratio) {
+        // We use a "clamp" to cap the ratio to a maximum value (to avoid overemphasizing extreme values)
         return Math.min((ratio - minRatio) / (maxRatio - minRatio), 1);
     }
 
-    // Define the custom gradient
+    // Define the custom gradient (More emphasis on green and yellow, and less on red)
     const gradient = {
-        0.0: 'green',        
-        0.2: 'lightgreen',  
-        0.4: 'yellow',       
-        0.6: 'orange',       
-        0.8: 'red',          
-        1.0: 'darkred'       
+        0.0: 'darkgreen',        
+        0.2: 'green',   
+        0.4: 'lightgreen',       
+        0.6: 'yellow',       
+        0.8: 'orange',          
+        1.0: 'red'       
     };
 
     // Create the heatmap layer
@@ -57,15 +59,15 @@ function createHeatmap(data, minRatio, maxRatio) {
         let lng = point[1];
         let ratio = point[2];
 
-        let normalizedRatio = normalize(ratio);  // Normalize the ratio and clamp it
+        let normalizedRatio = normalize(ratio); 
 
-        return [lat, lng, normalizedRatio];  // Return [lat, lng, intensity]
+        return [lat, lng, normalizedRatio];  
     }), {
-        radius: 50,        // Radius for each heatmap point (larger for better visibility)
-        blur: 10,          // Smoothing out the heatmap for better transitions
-        maxZoom: 13,       // Max zoom for heatmap layer
-        minOpacity: 0.3,   // Set opacity to make heatmap less transparent
-        gradient: gradient // Apply the custom gradient
+        radius: 30,        
+        blur: 5,          
+        maxZoom: 18,       
+        minOpacity: 0.3,   
+        gradient: gradient 
     });
 
     // Add the heatLayer to the map
