@@ -39,14 +39,14 @@ function normalize(ratio, minRatio, maxRatio) {
     return (ratio - minRatio) / (maxRatio - minRatio);
 }
 
-// Function to generate a color scale using D3.js
+// Function to generate a color scale using D3.js for smoother transitions
 function getColor(ratio, minRatio, maxRatio) {
     const normalized = normalize(ratio, minRatio, maxRatio);
 
-    // Generate a color scale from green (low) to red (high)
+    // Generate a color scale from green (low) to red (high) with more smooth transitions
     const colorScale = d3.scaleLinear()
         .domain([0, 0.2, 0.4, 0.6, 0.8, 1])
-        .range(["darkgreen", "green", "lightgreen", "yellow", "orange", "red"]);
+        .range(["green", "lightgreen", "yellow", "orange", "red", "brown"]);
 
     return colorScale(normalized);
 }
@@ -58,18 +58,19 @@ function plotPoints(data, minRatio, maxRatio) {
         let lng = point.lng;
         let ratio = point.ratio;
 
-        // Create a circle marker with customized color and size
+        // Create a circle marker with customized size, transparency and smoother color transitions
         L.circleMarker([lat, lng], {
-            radius: 8,  
+            radius: 15,  
             color: getColor(ratio, minRatio, maxRatio),  
-            fillColor: getColor(ratio, minRatio, maxRatio), 
-            fillOpacity: 0.8,  
-            weight: 1 
+            fillColor: getColor(ratio, minRatio, maxRatio),  
+            fillOpacity: 0.4,  
+            weight: 2,  
+            opacity: 0.5  
         }).addTo(map);
     });
 }
 
-// popup to display ratio on click
+// Popup to display ratio on click
 map.on('click', function(event) {
     let latLng = event.latlng;
     let nearestPoint = findNearestPoint(latLng, pointsData);
@@ -84,7 +85,7 @@ map.on('click', function(event) {
     }
 });
 
-//find the nearest point from the clicked location
+// Find the nearest point from the clicked location
 function findNearestPoint(latLng, data) {
     let closestPoint = null;
     let minDistance = Infinity;
