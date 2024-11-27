@@ -66,9 +66,9 @@ function createHeatmap(data, minRatio, maxRatio) {
         }
     }
 
-    // Log the min and max ratios for debugging
-    console.log("Min Ratio: ", minRatio);
-    console.log("Max Ratio: ", maxRatio);
+  
+   // console.log("Min Ratio: ", minRatio);
+   // console.log("Max Ratio: ", maxRatio);
 
     // Create the heatmap layer
     heatLayer = L.heatLayer(data.map(point => {
@@ -79,13 +79,12 @@ function createHeatmap(data, minRatio, maxRatio) {
         let normalizedRatio = normalize(ratio);
         console.log('Normalized Ratio:', normalizedRatio);
 
-        
         return [lat, lng, normalizedRatio];  
     }), {
-        radius: 30,        
-        blur: 15,          
+        radius: 50,        
+        blur: 6,          
         maxZoom: 13,
-        minOpacity: 0.2,   // Set opacity to make heatmap less transparent
+        minOpacity: 0.3,   
     });
 
     // Add the heatLayer to the map
