@@ -39,13 +39,14 @@ fetch('/api/v1.0/locations')
 
 // Create the heatmap using leaflet-heat:
 function createHeatmap(data, minRatio, maxRatio) {
-    
+    // Define a more granular gradient with multiple shades of green, yellow, orange, and red
     let gradient = {
-        0.0: 'green',      // Low ratio (fewer children per doctor)
-        0.2: 'light green',     // Slightly higher ratio
-        0.5: 'yellow',     // Medium ratio
-        0.8: 'orange',        // High ratio (many children per doctor)
-        1.0: 'red'     // Very high ratio
+        0.0: 'darkgreen',      // Very low ratio (few children per doctor)
+        0.2: 'green',          // Low ratio (fewer children per doctor)
+        0.4: 'lightgreen',     // Slightly lower ratio
+        0.6: 'yellow',         // Medium ratio
+        0.8: 'orange',         // High ratio (many children per doctor)
+        1.0: 'red'             // Very high ratio (many more children per doctor)
     };
 
     // Create heatmap layer
@@ -95,9 +96,10 @@ function addLegend(minRatio, maxRatio) {
 
     legend.onAdd = function(map) {
         let div = L.DomUtil.create('div', 'info legend');
-        let grades = [minRatio, (maxRatio - minRatio) * 0.2, (maxRatio - minRatio) * 0.5, (maxRatio - minRatio) * 0.8, maxRatio];
+        // Define the range values for the legend
+        let grades = [minRatio, (maxRatio - minRatio) * 0.2, (maxRatio - minRatio) * 0.4, (maxRatio - minRatio) * 0.6, (maxRatio - minRatio) * 0.8, maxRatio];
         let labels = [];
-        let colors = ['green', 'yellow', 'orange', 'red', 'darkred'];
+        let colors = ['darkgreen', 'green', 'lightgreen', 'yellow', 'orange', 'red'];
 
         // Go through each range and make a label with a colored box for each range
         for (let i = 0; i < grades.length; i++) {
