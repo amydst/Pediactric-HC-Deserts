@@ -8,8 +8,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-// Create layer groups for the doctor ratio and coverage circles
-let doctorRatioLayer = L.layerGroup();  // For heatmap (Doctor Ratio)
+// Create layer group for coverage circles
 let coverageLayer = L.layerGroup();  // For Coverage Rate
 
 // Color circles based on coverage rate
@@ -41,61 +40,18 @@ function createCoverageCircle(location) {
     .addTo(coverageLayer);
 }
 
-// Prepare heatmap data for doctor ratio
-let heatmapData = [];
-
-// Function to normalize the doctor-to-child ratio for heatmap intensity
-function getHeatmapIntensity(ratio) {
-    return Math.min(ratio / 10000, 1);  // Normalize ratio to a max of 1
-}
-
-// Create the heatmap data based on children-to-doctor ratio
-function createDoctorRatioHeatmap(location) {
-    let ratio = location.Children_to_Doctor_Ratio;
-    let lat = location.Latitude;
-    let lng = location.Longitude;
-
-    // Push the location and ratio (intensity) into the heatmapData array
-    heatmapData.push([lat, lng, getHeatmapIntensity(ratio)]);
-}
-
 // Fetch data from the API
 fetch('/api/v1.0/locations')
 .then(response => response.json())
 .then(data => {
-    // Create coverage circles and heatmap data
+    // Create coverage circles for each location
     data.forEach(location => {
         createCoverageCircle(location);  // Create coverage rate circle
-        createDoctorRatioHeatmap(location);  // Add data point for doctor ratio heatmap
     });
 
-    // Wait for a moment before adding the heatmap layer to ensure data is ready
-    setTimeout(() => {
-        // Create the heatmap layer using the doctor ratio data
-        let heat = L.heatLayer(heatmapData, {
-            radius: 25,
-            blur: 15,
-            maxZoom: 17,
-            gradient: {
-                0.4: 'blue',
-                0.6: 'lime',
-                0.8: 'red'
-            }
-        }).addTo(doctorRatioLayer); // Adding heatmap to the doctorRatioLayer
-
-        // Add the heatmap layer to the map
-        doctorRatioLayer.addTo(map);
-    }, 500);  // Delay in milliseconds (500ms)
+    // Add the coverage circles to the map
+    coverageLayer.addTo(map);
 })
 .catch(error => {
     console.error('Error fetching data:', error);
 });
-
-// Layer control for toggling between doctor ratio heatmap and coverage rate
-let overlays = {
-    "Doctor Ratio Heatmap": doctorRatioLayer,  // Heatmap for Doctor Ratio
-    "Coverage Rate": coverageLayer  // Coverage Rate circles
-};
-
-// Add layer control to toggle between doctor ratio heatmap and coverage rate
-L.control.layers(null, overlays).addTo(map);
