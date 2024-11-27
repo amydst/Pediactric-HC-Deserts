@@ -22,6 +22,8 @@ fetch('/api/v1.0/locations')
             let lng = location.Longitude;
             let ratio = location.Children_to_Doctor_Ratio;
 
+            console.log('Ratio:', ratio);
+
             // Track the min/max ratios to adjust the color scale
             minRatio = Math.min(minRatio, ratio);
             maxRatio = Math.max(maxRatio, ratio);
@@ -42,17 +44,17 @@ function createHeatmap(data, minRatio, maxRatio) {
     // Define the custom color function based on manual ranges
     function getColor(ratio) {
         if (ratio <= 1000) {
-            return 'green';
+            return 'darkgreen';
         } else if (ratio <= 2000) {
-            return 'lightgreen';
+            return 'green';
         } else if (ratio <= 3000) {
-            return 'yellow';
+            return 'lightgreen';
         } else if (ratio <= 4000) {
-            return 'orange';
+            return 'yellow';
         } else if (ratio <= 5000) {
-            return 'red';
+            return 'orange';
         } else {
-            return 'darkred'; // For ratios above 5000
+            return 'red'; // For ratios above 5000
         }
     }
 
