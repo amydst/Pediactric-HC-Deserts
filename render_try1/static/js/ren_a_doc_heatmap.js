@@ -8,11 +8,10 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-// Initialize an empty array for heatmap data
-let heatmapData = [];
+// Initialize an empty array for points data
+let pointsData = [];
 let minRatio = Infinity;
 let maxRatio = -Infinity;
-let heatLayer;  
 
 // Fetch the data from the API
 fetch('/api/v1.0/locations')
@@ -23,94 +22,72 @@ fetch('/api/v1.0/locations')
             let lng = location.Longitude;
             let ratio = location.Children_to_Doctor_Ratio;
 
-            minRatio = Math.min(minRatio, ratio);  
-            maxRatio = Math.max(maxRatio, ratio);  
+            minRatio = Math.min(minRatio, ratio);
+            maxRatio = Math.max(maxRatio, ratio);
 
-            heatmapData.push([lat, lng, ratio]);  
+            pointsData.push({ lat, lng, ratio });
         });
 
-        createHeatmap(heatmapData, minRatio, maxRatio);
+        plotPoints(pointsData, minRatio, maxRatio);
     })
     .catch(error => {
         console.error('Error fetching data:', error);
     });
 
-// Function to create the heatmap using leaflet-heat:
-function createHeatmap(data, minRatio, maxRatio) {
-    
-    function normalize(ratio) {       
-        return Math.min((ratio - minRatio) / (maxRatio - minRatio), 1);
-    }
+// Function to normalize ratio value between 0 and 1
+function normalize(ratio, minRatio, maxRatio) {
+    return (ratio - minRatio) / (maxRatio - minRatio);
+}
 
-    
-    const gradient = {
-        0.0: 'darkgreen',        
-        0.2: 'green',  
-        0.4: 'lightgreen',  
-        0.6: 'yellow',       
-        0.8: 'orange',       
-        1.0: 'red'      
-    };
+// Function to define color based on ratio value
+function getColor(ratio, minRatio, maxRatio) {
+    const normalized = normalize(ratio, minRatio, maxRatio);
+    if (normalized <= 0.2) return 'darkgreen';  
+    if (normalized <= 0.4) return 'green';      
+    if (normalized <= 0.6) return 'lightgreen'; 
+    if (normalized <= 0.8) return 'yellow';    
+    return 'red';  
+}
 
-    //heatmap layer with weighted intensity based on ratio (ratio as the weight)
-    heatLayer = L.heatLayer(data.map(point => {
-        let lat = point[0];
-        let lng = point[1];
-        let ratio = point[2];
+// Function to plot points on the map
+function plotPoints(data, minRatio, maxRatio) {
+    data.forEach(point => {
+        let lat = point.lat;
+        let lng = point.lng;
+        let ratio = point.ratio;
 
-    
-        let normalizedRatio = normalize(ratio);  
-
-        
-        return [lat, lng, normalizedRatio];  
-    }), {
-        radius: 30,        
-        blur: 15,          
-        maxZoom: 13,       
-        minOpacity: 0.2,  
-        gradient: gradient, 
-        max: 1             
-    });
-
-    // Add the heatLayer to the map
-    heatLayer.addTo(map);
-
-    // Control to toggle the heatmap layer on/off
-    let baseMaps = {
-        "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        })
-    };
-
-    let overlayMaps = {
-        "Heatmap": heatLayer
-    };
-
-    L.control.layers(baseMaps, overlayMaps).addTo(map);
-
-    // Add popup on map click to show the ratio
-    map.on('click', function(event) {
-        let latLng = event.latlng;
-        let nearestPoint = findNearestPoint(latLng, data);
-        if (nearestPoint) {
-            let ratio = nearestPoint[2];
-            // Round the ratio to the nearest whole number
-            let roundedRatio = Math.round(ratio);
-            let popupContent = `Children to Doctor Ratio: ${roundedRatio}`;
-            L.popup()
-                .setLatLng(latLng)
-                .setContent(popupContent)
-                .openOn(map);
-        }
+        // Create a circle marker with customized size and color
+        L.circleMarker([lat, lng], {
+            radius: 6,  // You can adjust the size of the marker
+            color: getColor(ratio, minRatio, maxRatio),  // Color based on ratio
+            fillColor: getColor(ratio, minRatio, maxRatio),  // Fill color
+            fillOpacity: 0.7,  // Set the opacity to make the circles semi-transparent
+            weight: 1  // Border weight
+        }).addTo(map);
     });
 }
 
-// Function to find the nearest heatmap point to the clicked point
+// Add popup to display ratio on click
+map.on('click', function(event) {
+    let latLng = event.latlng;
+    let nearestPoint = findNearestPoint(latLng, pointsData);
+    if (nearestPoint) {
+        let ratio = nearestPoint.ratio;
+        let roundedRatio = Math.round(ratio);
+        let popupContent = `Children to Doctor Ratio: ${roundedRatio}`;
+        L.popup()
+            .setLatLng(latLng)
+            .setContent(popupContent)
+            .openOn(map);
+    }
+});
+
+// Function to find the nearest point from the clicked location
 function findNearestPoint(latLng, data) {
     let closestPoint = null;
     let minDistance = Infinity;
     data.forEach(point => {
-        let pointLatLng = L.latLng(point[0], point[1]);
+        let pointLatLng = L.latLng(point.lat, point.lng);
         let distance = latLng.distanceTo(pointLatLng);
         if (distance < minDistance) {
             minDistance = distance;
