@@ -41,39 +41,38 @@ fetch('/api/v1.0/locations')
 
 // Function to create the heatmap using leaflet-heat:
 function createHeatmap(data, minRatio, maxRatio) {
-    // Define the custom color function based on manual ranges
-    function getColor(ratio) {
-        if (ratio <= 1000) {
-            return 'darkgreen';
-        } else if (ratio <= 2000) {
-            return 'green';
-        } else if (ratio <= 3000) {
-            return 'lightgreen';
-        } else if (ratio <= 4000) {
-            return 'yellow';
-        } else if (ratio <= 5000) {
-            return 'orange';
-        } else {
-            return 'red'; // For ratios above 5000
-        }
-    }
+    // Define the custom gradient based on your manual ranges
+    let gradient = {
+        0.0: 'darkgreen',    // Very low ratio
+        0.10: 'green',       // Low ratio
+        0.20: 'lightgreen',  // Medium-low ratio
+        0.30: 'yellowgreen', // Medium ratio
+        0.40: 'yellow',      // Medium-high ratio
+        0.50: 'orange',      // High ratio
+        0.60: 'red',         // Very high ratio
+        0.70: 'darkred',     // Extremely high ratio
+        1.0: 'brown'         // Maximal ratio
+    };
 
-
+    // Create the heatmap layer based on the ratio values
     let heatLayer = L.heatLayer(data.map(point => {
         let lat = point[0];
         let lng = point[1];
         let ratio = point[2];
-        let color = getColor(ratio); // Get color based on ratio
 
-        // Push data to heatmap layer
-        return [lat, lng, color];
+        // Normalize ratio between 0 and 1 for the gradient
+        let normalizedRatio = (ratio - minRatio) / (maxRatio - minRatio);
+
+        // Push normalized data to heatmap layer
+        return [lat, lng, normalizedRatio];
     }), {
         radius: 25,        
         blur: 20,          
-        maxZoom: 13
+        maxZoom: 13,
+        gradient: gradient // Apply the gradient to control color
     }).addTo(map);
 
-
+    // Handle click events on the map to show ratio
     map.on('click', function(event) {
         let latLng = event.latlng;
         let nearestPoint = findNearestPoint(latLng, data);
