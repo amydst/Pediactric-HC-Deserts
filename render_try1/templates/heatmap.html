@@ -10,14 +10,24 @@
 
   <!-- Your custom CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/ren_a_doc_map.css') }}">
+  
+  <!-- Optional: Leaflet CSS if you want to use Leaflet for base map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
   <style>
-    body { margin: 0; }
-    svg { width: 100%; height: 100vh; }
+    body { margin: 0; padding: 0; }
+    #map { width: 100%; height: 100vh; position: relative; }
+    svg { position: absolute; top: 0; left: 0; pointer-events: none; width: 100%; height: 100%; }
   </style>
 </head>
 <body class="heatmap-page">
-  <svg id="map"></svg>  <!-- Map will be rendered here -->
+  <!-- Map container (can be Leaflet or another map library) -->
+  <div id="map"></div>
 
+  <!-- D3 SVG will overlay the heatmap here -->
+  <svg id="heatmap-overlay"></svg>
+
+  <!-- Your custom JS for the heatmap -->
   <script src="{{ url_for('static', filename='js/ren_a_doc_heatmap.js') }}"></script>
 </body>
 </html>

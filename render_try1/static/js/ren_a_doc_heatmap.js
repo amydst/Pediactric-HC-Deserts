@@ -1,59 +1,84 @@
-const width = window.innerWidth;
-const height = window.innerHeight;
+let map = L.map('map', {
+    center: [36.7783, -119.4179],
+    zoom: 6
+});
 
-// Create an SVG element where the map will be drawn
-const svg = d3.select("svg")
-              .attr("width", width)
-              .attr("height", height);
+// Add OpenStreetMap tiles
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
 
-// Color scale for the heatmap
-const colorScale = d3.scaleSequential(d3.interpolateViridis)
-                     .domain([0, 1]); // Range of intensity from 0 to 1
-
-
-const projection = d3.geoMercator()
-                     .center([-119.4179, 36.7783]) // Center on California
-                     .scale(1500) // Set the scale of the map
-                     .translate([width / 2, height / 2]); // Translate the map to center in the SVG
+// Prepare data for doctor ratio heatmap
+let heatmapData = [];
+let minRatio = Infinity;
+let maxRatio = -Infinity;
 
 // Fetch data from the API
 fetch('/api/v1.0/locations')
-  .then(response => response.json())
-  .then(data => {
+    .then(response => response.json())
+    .then(data => {
+        // Add data points for the heatmap and find min/max ratios
+        data.forEach(location => {
+            let ratio = location.Children_to_Doctor_Ratio;
+            let lat = location.Latitude;
+            let lng = location.Longitude;
 
-    // Prepare data for the heatmap (converting lat/lon to screen positions)
-    const heatmapData = data.map(location => {
-        return {
-            lat: location.Latitude,
-            lon: location.Longitude,
-            intensity: location.Children_to_Doctor_Ratio 
-        };
+            // Track the min and max doctor-to-child ratios
+            minRatio = Math.min(minRatio, ratio);
+            maxRatio = Math.max(maxRatio, ratio);
+
+            // Push the location and normalized ratio into the heatmap data array
+            heatmapData.push([lat, lng, ratio]);
+        });
+
+        // Now plot the heatmap using the calculated data
+        plotHeatmap(heatmapData, minRatio, maxRatio);
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
     });
 
-    // intensity (it's between 0 and 1)
-    const maxIntensity = d3.max(heatmapData, d => d.intensity);
-    const normalizeIntensity = (intensity) => Math.min(intensity / maxIntensity, 1); //value never goes above 1
+// Function to plot heatmap using D3
+function plotHeatmap(data, minRatio, maxRatio) {
+    // Create an SVG layer for the heatmap (D3 will handle it)
+    let svg = d3.select(map.getPanes().overlayPane).append('svg')
+        .attr('width', map.getSize().x)
+        .attr('height', map.getSize().y);
 
-    // Draw the circles for the heatmap (each circle represents a location with intensity)
-    svg.selectAll("circle")
-       .data(heatmapData)
-       .enter()
-       .append("circle")
-       .attr("cx", d => projection([d.lon, d.lat])[0]) // Convert lat/lon to screen x coordinate
-       .attr("cy", d => projection([d.lon, d.lat])[1]) // Convert lat/lon to screen y coordinate
-       .attr("r", 15)  // radius of the circles
-       .style("fill", d => colorScale(normalizeIntensity(d.intensity)))  // color based on intensity
-       .style("opacity", 0.7) 
-       .attr("stroke", "black")
-       .attr("stroke-width", 0.5);
+    let g = svg.append('g'); // Group for heatmap points
 
-    // Add tooltips to show the ratio when hovering over each circle
-    svg.selectAll("circle")
-       .append("title")
-       .text(d => `Children-to-Doctor Ratio: ${d.intensity}`);
+    // Scale for circle size (based on ratio)
+    let radiusScale = d3.scaleLinear()
+        .domain([minRatio, maxRatio]) // From min to max ratio
+        .range([5, 30]); // Adjust circle sizes based on ratio
 
-  })
-  .catch(error => {
-    // If there's an error fetching the data, log it
-    console.error('Error fetching data:', error);
-  });
+    // Color scale: green (low ratio) to red (high ratio)
+    let colorScale = d3.scaleLinear()
+        .domain([minRatio, maxRatio])  // Use the ratio range for color scale
+        .range(["green", "red"]);  // Green for fewer children per doctor, red for more
+
+    // Project latitude and longitude to the map's pixel coordinates
+    let latLngToPoint = map.latLngToLayerPoint.bind(map);
+
+    // Bind data points to circles
+    let circles = g.selectAll('circle')
+        .data(data)
+        .enter().append('circle')
+        .attr('cx', d => latLngToPoint(L.latLng(d[0], d[1])).x) // X position
+        .attr('cy', d => latLngToPoint(L.latLng(d[0], d[1])).y) // Y position
+        .attr('r', d => radiusScale(d[2])) // Radius based on doctor-to-child ratio
+        .style('fill', d => colorScale(d[2])) // Color based on ratio
+        .style('opacity', 0.6);
+
+    // Update circles on map move or zoom
+    map.on('moveend', () => {
+        circles.attr('cx', d => latLngToPoint(L.latLng(d[0], d[1])).x)
+            .attr('cy', d => latLngToPoint(L.latLng(d[0], d[1])).y);
+    });
+
+    // Handle resizing
+    map.on('resize', () => {
+        svg.attr('width', map.getSize().x)
+            .attr('height', map.getSize().y);
+    });
+}
