@@ -3,27 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Heatmap</title>
+  <title>Heatmap with D3.js</title>
 
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
-  <!-- Leaflet Heatmap CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-heat/0.2.0/leaflet-heat.css" />
+  <!-- D3.js -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
 
   <!-- Your custom CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/ren_a_doc_map.css') }}">
+  <style>
+    body { margin: 0; }
+    svg { width: 100%; height: 100vh; }
+  </style>
 </head>
 <body class="heatmap-page">
-  <div id="map"></div>  <!-- Map will be here -->
+  <svg id="map"></svg>  <!-- Map will be rendered here -->
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
-  <!-- Leaflet Heatmap JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-heat/0.2.0/leaflet-heat.js"></script>
-
-  <!-- custom JS -->
   <script src="{{ url_for('static', filename='js/ren_a_doc_heatmap.js') }}"></script>
 </body>
 </html>

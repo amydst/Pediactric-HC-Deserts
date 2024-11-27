@@ -1,52 +1,59 @@
-let map = L.map('map', {
-    center: [36.7783, -119.4179],
-    zoom: 6
-});
+const width = window.innerWidth;
+const height = window.innerHeight;
 
-// Add OpenStreetMap tiles
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+// Create an SVG element where the map will be drawn
+const svg = d3.select("svg")
+              .attr("width", width)
+              .attr("height", height);
 
-// Prepare heatmap data for doctor ratio
-let heatmapData = [];
-
-
-function getHeatmapIntensity(ratio) {
-    return Math.min(ratio / 10000, 1);  // Normalize ratio to a max of 1
-}
+// Color scale for the heatmap
+const colorScale = d3.scaleSequential(d3.interpolateViridis)
+                     .domain([0, 1]); // Range of intensity from 0 to 1
 
 
-function createDoctorRatioHeatmap(location) {
-    let ratio = location.Children_to_Doctor_Ratio;
-    let lat = location.Latitude;
-    let lng = location.Longitude;
-
-
-    heatmapData.push([lat, lng, getHeatmapIntensity(ratio)]);
-}
+const projection = d3.geoMercator()
+                     .center([-119.4179, 36.7783]) // Center on California
+                     .scale(1500) // Set the scale of the map
+                     .translate([width / 2, height / 2]); // Translate the map to center in the SVG
 
 // Fetch data from the API
 fetch('/api/v1.0/locations')
-.then(response => response.json())
-.then(data => {
-    // Add data points for the heatmap
-    data.forEach(location => {
-        createDoctorRatioHeatmap(location);  
+  .then(response => response.json())
+  .then(data => {
+
+    // Prepare data for the heatmap (converting lat/lon to screen positions)
+    const heatmapData = data.map(location => {
+        return {
+            lat: location.Latitude,
+            lon: location.Longitude,
+            intensity: location.Children_to_Doctor_Ratio 
+        };
     });
 
-    
-    let heat = L.heatLayer(heatmapData, {
-        radius: 25,
-        blur: 15,
-        maxZoom: 17,
-        gradient: {
-            0.4: 'blue',
-            0.6: 'lime',
-            0.8: 'red'
-        }
-    }).addTo(map);
-})
-.catch(error => {
+    // intensity (it's between 0 and 1)
+    const maxIntensity = d3.max(heatmapData, d => d.intensity);
+    const normalizeIntensity = (intensity) => Math.min(intensity / maxIntensity, 1); //value never goes above 1
+
+    // Draw the circles for the heatmap (each circle represents a location with intensity)
+    svg.selectAll("circle")
+       .data(heatmapData)
+       .enter()
+       .append("circle")
+       .attr("cx", d => projection([d.lon, d.lat])[0]) // Convert lat/lon to screen x coordinate
+       .attr("cy", d => projection([d.lon, d.lat])[1]) // Convert lat/lon to screen y coordinate
+       .attr("r", 15)  // radius of the circles
+       .style("fill", d => colorScale(normalizeIntensity(d.intensity)))  // color based on intensity
+       .style("opacity", 0.7) 
+       .attr("stroke", "black")
+       .attr("stroke-width", 0.5);
+
+    // Add tooltips to show the ratio when hovering over each circle
+    svg.selectAll("circle")
+       .append("title")
+       .text(d => `Children-to-Doctor Ratio: ${d.intensity}`);
+
+  })
+  .catch(error => {
+    // If there's an error fetching the data, log it
     console.error('Error fetching data:', error);
-});
+  });
