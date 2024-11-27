@@ -63,8 +63,8 @@ function createHeatmap(data, minRatio, maxRatio) {
 
         return [lat, lng, normalizedRatio];  
     }), {
-        radius: 15,        
-        blur: 20,         
+        radius: 20,        
+        blur: 5,         
         maxZoom: 13,      
         minOpacity: 0.3,   
         gradient: gradient 
