@@ -60,12 +60,12 @@ function plotPoints(data, minRatio, maxRatio) {
 
         // Create a circle marker with customized size, transparency and smoother color transitions
         L.circleMarker([lat, lng], {
-            radius: 15,  
+            radius: 18,  
             color: getColor(ratio, minRatio, maxRatio),  
             fillColor: getColor(ratio, minRatio, maxRatio),  
-            fillOpacity: 0.4,  
-            weight: 2,  
-            opacity: 0.5  
+            fillOpacity: 0.3,
+            weight: 4,  
+            opacity: 0.1  
         }).addTo(map);
     });
 }
