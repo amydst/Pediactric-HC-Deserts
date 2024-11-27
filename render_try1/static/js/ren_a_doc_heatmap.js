@@ -22,17 +22,17 @@ fetch('/api/v1.0/locations')
             let lng = location.Longitude;
             let ratio = location.Children_to_Doctor_Ratio;
 
-            console.log('Ratio:', ratio); // Log raw ratio values for debugging
+            //console.log('Ratio:', ratio); 
 
-            // Track the min/max ratios to adjust the color scale
+            
             minRatio = Math.min(minRatio, ratio);
             maxRatio = Math.max(maxRatio, ratio);
 
-            // Push the data into heatmapData array
+            
             heatmapData.push([lat, lng, ratio]);
         });
 
-        // After fetching all data, create the heatmap layer with the dynamic color scale
+       
         createHeatmap(heatmapData, minRatio, maxRatio);
     })
     .catch(error => {
@@ -48,17 +48,24 @@ function createHeatmap(data, minRatio, maxRatio) {
 
     // color function based on normalized value
     function getColor(normalizedRatio) {
+        console.log('Normalized Ratio:', normalizedRatio); 
         if (normalizedRatio <= 0.1) {
+            console.log('Assigned Color: darkgreen');  
             return 'darkgreen';
         } else if (normalizedRatio <= 0.2) {
+            console.log('Assigned Color: green');  
             return 'green';
         } else if (normalizedRatio <= 0.4) {
+            console.log('Assigned Color: lightgreen'); 
             return 'lightgreen';
         } else if (normalizedRatio <= 0.6) {
+            console.log('Assigned Color: yellow');  
             return 'yellow';
         } else if (normalizedRatio <= 0.8) {
+            console.log('Assigned Color: orange'); 
             return 'orange';
         } else {
+            console.log('Assigned Color: red');  
             return 'red'; // For ratios above 0.8
         }
     }
@@ -73,17 +80,16 @@ function createHeatmap(data, minRatio, maxRatio) {
         let lng = point[1];
         let ratio = point[2];
 
-        // Normalize the ratio to the range [0, 1]
+     
         let normalizedRatio = normalize(ratio);
 
-        // Log the normalized ratio for debugging
         console.log('Normalized Ratio:', normalizedRatio);
 
-        // Get color based on normalized ratio (this is for debugging purposes)
-        let color = getColor(normalizedRatio);
+   
+        let color = getColor(normalizedRatio);  
 
-        // Return the data for the heatmap with normalized intensity (not color)
-        return [lat, lng, normalizedRatio]; // The intensity should be normalizedRatio
+       
+        return [lat, lng, normalizedRatio]; 
     }), {
         radius: 25,        
         blur: 20,          
