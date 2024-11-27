@@ -34,40 +34,42 @@ fetch('/api/v1.0/locations')
         console.error('Error fetching data:', error);
     });
 
-// Function to normalize ratio value between 0 and 1
+// Normalize the ratio to a value between 0 and 1
 function normalize(ratio, minRatio, maxRatio) {
     return (ratio - minRatio) / (maxRatio - minRatio);
 }
 
-// Function to define color based on ratio value
+// Function to generate a color scale using D3.js
 function getColor(ratio, minRatio, maxRatio) {
     const normalized = normalize(ratio, minRatio, maxRatio);
-    if (normalized <= 0.2) return 'darkgreen';  
-    if (normalized <= 0.4) return 'green';      
-    if (normalized <= 0.6) return 'lightgreen'; 
-    if (normalized <= 0.8) return 'yellow';    
-    return 'red';  
+
+    // Generate a color scale from green (low) to red (high)
+    const colorScale = d3.scaleLinear()
+        .domain([0, 0.2, 0.4, 0.6, 0.8, 1])
+        .range(["darkgreen", "green", "lightgreen", "yellow", "orange", "red"]);
+
+    return colorScale(normalized);
 }
 
-// Function to plot points on the map
+// Function to plot points on the map with color depending on ratio
 function plotPoints(data, minRatio, maxRatio) {
     data.forEach(point => {
         let lat = point.lat;
         let lng = point.lng;
         let ratio = point.ratio;
 
-        // Create a circle marker with customized size and color
+        // Create a circle marker with customized color and size
         L.circleMarker([lat, lng], {
-            radius: 6,  // You can adjust the size of the marker
-            color: getColor(ratio, minRatio, maxRatio),  // Color based on ratio
-            fillColor: getColor(ratio, minRatio, maxRatio),  // Fill color
-            fillOpacity: 0.7,  // Set the opacity to make the circles semi-transparent
-            weight: 1  // Border weight
+            radius: 8,  
+            color: getColor(ratio, minRatio, maxRatio),  
+            fillColor: getColor(ratio, minRatio, maxRatio), 
+            fillOpacity: 0.8,  
+            weight: 1 
         }).addTo(map);
     });
 }
 
-// Add popup to display ratio on click
+// popup to display ratio on click
 map.on('click', function(event) {
     let latLng = event.latlng;
     let nearestPoint = findNearestPoint(latLng, pointsData);
@@ -82,7 +84,7 @@ map.on('click', function(event) {
     }
 });
 
-// Function to find the nearest point from the clicked location
+//find the nearest point from the clicked location
 function findNearestPoint(latLng, data) {
     let closestPoint = null;
     let minDistance = Infinity;
