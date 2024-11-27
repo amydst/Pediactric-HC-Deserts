@@ -1,4 +1,4 @@
-html, body {
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -19,12 +19,47 @@ html, body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 20px;
+  padding: 0;
 }
 
-.home-page h1, .home-page p {
-  color: white;
-  text-align: left;
+/* New text overlay styling */
+.text-overlay {
+  background-color: #f2e1c1;  /* Creamy color background */
+  width: 100%;
+  padding: 40px 20px;  /* Adds space around the text */
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  color: black;
+  text-align: center;
+}
+
+.text-overlay h1 {
+  font-size: 2rem;
+  margin: 0;
+  padding-bottom: 10px;
+}
+
+.text-overlay .subtitle {
+  font-size: 3rem;  /* Makes the subtitle larger */
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.text-overlay p {
+  font-size: 1.2rem;
+  margin: 5px 0;
+  line-height: 1.5;
+}
+
+.text-overlay a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.text-overlay a:hover {
+  text-decoration: underline;
 }
 
 /* Map page styling */

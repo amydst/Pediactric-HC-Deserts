@@ -77,7 +77,7 @@ map.on('click', function(event) {
     if (nearestPoint) {
         let ratio = nearestPoint.ratio;
         let roundedRatio = Math.round(ratio);
-        let popupContent = `Children to Doctor Ratio: ${roundedRatio}`;
+        let popupContent = `Children per Doctor: ${roundedRatio}`;
         L.popup()
             .setLatLng(latLng)
             .setContent(popupContent)
