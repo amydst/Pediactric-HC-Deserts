@@ -22,7 +22,7 @@ fetch('/api/v1.0/locations')
             let lng = location.Longitude;
             let ratio = location.Children_to_Doctor_Ratio;
 
-            console.log('Ratio:', ratio);
+            console.log('Ratio:', ratio); // Log raw ratio values for debugging
 
             // Track the min/max ratios to adjust the color scale
             minRatio = Math.min(minRatio, ratio);
@@ -63,6 +63,10 @@ function createHeatmap(data, minRatio, maxRatio) {
         }
     }
 
+    // Log the min and max ratios for debugging
+    console.log("Min Ratio: ", minRatio);
+    console.log("Max Ratio: ", maxRatio);
+
     // Create the heatmap layer
     let heatLayer = L.heatLayer(data.map(point => {
         let lat = point[0];
@@ -72,11 +76,14 @@ function createHeatmap(data, minRatio, maxRatio) {
         // Normalize the ratio to the range [0, 1]
         let normalizedRatio = normalize(ratio);
 
-        // Get color based on normalized ratio
+        // Log the normalized ratio for debugging
+        console.log('Normalized Ratio:', normalizedRatio);
+
+        // Get color based on normalized ratio (this is for debugging purposes)
         let color = getColor(normalizedRatio);
 
-        // Push data to heatmap layer, using normalized intensity (0-1)
-        return [lat, lng, normalizedRatio];
+        // Return the data for the heatmap with normalized intensity (not color)
+        return [lat, lng, normalizedRatio]; // The intensity should be normalizedRatio
     }), {
         radius: 25,        
         blur: 20,          
