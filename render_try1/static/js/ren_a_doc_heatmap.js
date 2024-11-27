@@ -32,7 +32,7 @@ fetch('/api/v1.0/locations')
             heatmapData.push([lat, lng, ratio]);
         });
 
-        // Create the heatmap layer with the dynamic color scale
+        // After fetching all data, create the heatmap layer with the dynamic color scale
         createHeatmap(heatmapData, minRatio, maxRatio);
     })
     .catch(error => {
@@ -41,38 +41,49 @@ fetch('/api/v1.0/locations')
 
 // Function to create the heatmap using leaflet-heat:
 function createHeatmap(data, minRatio, maxRatio) {
-    // Define the custom gradient based on your manual ranges
-    let gradient = {
-        0.0: 'darkgreen',    // Very low ratio
-        0.10: 'green',       // Low ratio
-        0.20: 'lightgreen',  // Medium-low ratio
-        0.30: 'yellowgreen', // Medium ratio
-        0.40: 'yellow',      // Medium-high ratio
-        0.50: 'orange',      // High ratio
-        0.60: 'red',         // Very high ratio
-        0.70: 'darkred',     // Extremely high ratio
-        1.0: 'brown'         // Maximal ratio
-    };
+    // Normalize the ratio to a scale of 0 to 1
+    function normalize(ratio) {
+        return (ratio - minRatio) / (maxRatio - minRatio);
+    }
 
-    // Create the heatmap layer based on the ratio values
+    // color function based on normalized value
+    function getColor(normalizedRatio) {
+        if (normalizedRatio <= 0.1) {
+            return 'darkgreen';
+        } else if (normalizedRatio <= 0.2) {
+            return 'green';
+        } else if (normalizedRatio <= 0.4) {
+            return 'lightgreen';
+        } else if (normalizedRatio <= 0.6) {
+            return 'yellow';
+        } else if (normalizedRatio <= 0.8) {
+            return 'orange';
+        } else {
+            return 'red'; // For ratios above 0.8
+        }
+    }
+
+    // Create the heatmap layer
     let heatLayer = L.heatLayer(data.map(point => {
         let lat = point[0];
         let lng = point[1];
         let ratio = point[2];
 
-        // Normalize ratio between 0 and 1 for the gradient
-        let normalizedRatio = (ratio - minRatio) / (maxRatio - minRatio);
+        // Normalize the ratio to the range [0, 1]
+        let normalizedRatio = normalize(ratio);
 
-        // Push normalized data to heatmap layer
+        // Get color based on normalized ratio
+        let color = getColor(normalizedRatio);
+
+        // Push data to heatmap layer, using normalized intensity (0-1)
         return [lat, lng, normalizedRatio];
     }), {
         radius: 25,        
         blur: 20,          
-        maxZoom: 13,
-        gradient: gradient // Apply the gradient to control color
+        maxZoom: 13
     }).addTo(map);
 
-    // Handle click events on the map to show ratio
+    // Add popup on map click to show the ratio
     map.on('click', function(event) {
         let latLng = event.latlng;
         let nearestPoint = findNearestPoint(latLng, data);
