@@ -12,7 +12,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let heatmapData = [];
 let minRatio = Infinity;
 let maxRatio = -Infinity;
-let heatLayer;  // Declare heatLayer outside to make it accessible for layers control
+let heatLayer;  
 
 // Fetch the data from the API
 fetch('/api/v1.0/locations')
@@ -23,8 +23,8 @@ fetch('/api/v1.0/locations')
             let lng = location.Longitude;
             let ratio = location.Children_to_Doctor_Ratio;
 
-            minRatio = Math.min(minRatio, ratio);  // Find minimum ratio
-            maxRatio = Math.max(maxRatio, ratio);  // Find maximum ratio
+            minRatio = Math.min(minRatio, ratio);  
+            maxRatio = Math.max(maxRatio, ratio);  
 
             heatmapData.push([lat, lng, ratio]);  
         });
@@ -37,11 +37,12 @@ fetch('/api/v1.0/locations')
 
 // Function to create the heatmap using leaflet-heat:
 function createHeatmap(data, minRatio, maxRatio) {
+    
     function normalize(ratio) {       
         return Math.min((ratio - minRatio) / (maxRatio - minRatio), 1);
     }
 
-    // Define the custom gradient
+    
     const gradient = {
         0.0: 'darkgreen',        
         0.2: 'green',  
@@ -51,22 +52,24 @@ function createHeatmap(data, minRatio, maxRatio) {
         1.0: 'red'      
     };
 
-    // Create the heatmap layer
+    //heatmap layer with weighted intensity based on ratio (ratio as the weight)
     heatLayer = L.heatLayer(data.map(point => {
         let lat = point[0];
         let lng = point[1];
         let ratio = point[2];
 
+    
         let normalizedRatio = normalize(ratio);  
 
-        // Return each point with adjusted intensity based on ratio
-        return [lat, lng, normalizedRatio];  // Return [lat, lng, intensity]
+        
+        return [lat, lng, normalizedRatio];  
     }), {
-        radius: 40,        
-        blur: 10,         
-        maxZoom: 13,      
-        minOpacity: 0.3,   
-        gradient: gradient
+        radius: 30,        
+        blur: 15,          
+        maxZoom: 13,       
+        minOpacity: 0.2,  
+        gradient: gradient, 
+        max: 1             
     });
 
     // Add the heatLayer to the map
