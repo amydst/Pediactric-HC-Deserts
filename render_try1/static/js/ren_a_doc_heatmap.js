@@ -37,33 +37,41 @@ fetch('/api/v1.0/locations')
         console.error('Error fetching data:', error);
     });
 
-// Create the heatmap using leaflet-heat:
+// Function to create the heatmap using leaflet-heat:
 function createHeatmap(data, minRatio, maxRatio) {
-    // Define a more granular gradient with corrected colors
-    let gradient = {
-        0.0: 'darkgreen',    // Very low ratio (few children per doctor)
-        0.10: 'green',       // Low ratio
-        0.20: 'lightgreen',  // Low-medium ratio
-        0.30: 'mediumseagreen', // Medium-low ratio
-        0.40: 'yellowgreen', // Medium ratio
-        0.50: 'yellow',      // Medium-high ratio
-        0.60: 'lightyellow', // High ratio
-        0.70: 'orange',      // Higher ratio
-        0.75: 'darkorange',  // Very high ratio
-        0.80: 'red',         // Extremely high ratio
-        0.90: 'darkred',     // Maximal ratio
-        1.0: 'brown'         // For the highest ratio (maximum)
-    };
+    // Define the custom color function based on manual ranges
+    function getColor(ratio) {
+        if (ratio <= 1000) {
+            return 'green';
+        } else if (ratio <= 2000) {
+            return 'lightgreen';
+        } else if (ratio <= 3000) {
+            return 'yellow';
+        } else if (ratio <= 4000) {
+            return 'orange';
+        } else if (ratio <= 5000) {
+            return 'red';
+        } else {
+            return 'darkred'; // For ratios above 5000
+        }
+    }
 
-    // Create heatmap layer
-    let heatLayer = L.heatLayer(data, {
+
+    let heatLayer = L.heatLayer(data.map(point => {
+        let lat = point[0];
+        let lng = point[1];
+        let ratio = point[2];
+        let color = getColor(ratio); // Get color based on ratio
+
+        // Push data to heatmap layer
+        return [lat, lng, color];
+    }), {
         radius: 25,        
         blur: 20,          
-        maxZoom: 13,      
-        gradient: gradient 
+        maxZoom: 13
     }).addTo(map);
 
-    // Interactivity: handle click events on the map, not the heat layer
+
     map.on('click', function(event) {
         let latLng = event.latlng;
         let nearestPoint = findNearestPoint(latLng, data);
