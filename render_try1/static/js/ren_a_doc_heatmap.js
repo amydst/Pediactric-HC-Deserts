@@ -39,20 +39,20 @@ fetch('/api/v1.0/locations')
 
 // Create the heatmap using leaflet-heat:
 function createHeatmap(data, minRatio, maxRatio) {
-    // Define a more granular gradient with 12 shades
+    // Define a more granular gradient with corrected colors
     let gradient = {
         0.0: 'darkgreen',    // Very low ratio (few children per doctor)
         0.10: 'green',       // Low ratio
         0.20: 'lightgreen',  // Low-medium ratio
-        0.30: 'yellowgreen', // Medium-low ratio
-        0.40: 'yellow',      // Medium ratio
-        0.50: 'lightyellow', // Medium-high ratio
-        0.60: 'yellow',      // High ratio
+        0.30: 'mediumseagreen', // Medium-low ratio
+        0.40: 'yellowgreen', // Medium ratio
+        0.50: 'yellow',      // Medium-high ratio
+        0.60: 'lightyellow', // High ratio
         0.70: 'orange',      // Higher ratio
-        0.75: 'red',         // Very high ratio
-        0.80: 'darkred',     // Extremely high ratio
-        0.90: 'lightbrown',  // Highest ratio
-        1.0: 'brown'         // Maximal ratio
+        0.75: 'darkorange',  // Very high ratio
+        0.80: 'red',         // Extremely high ratio
+        0.90: 'darkred',     // Maximal ratio
+        1.0: 'brown'         // For the highest ratio (maximum)
     };
 
     // Create heatmap layer
