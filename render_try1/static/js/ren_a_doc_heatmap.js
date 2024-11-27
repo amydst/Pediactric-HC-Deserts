@@ -3,67 +3,74 @@ let map = L.map('map', {
     zoom: 6
 });
 
+// Add OpenStreetMap tiles
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+// Initialize an empty array for heatmap data
 let heatmapData = [];
-let minRatio = Infinity;
-let maxRatio = -Infinity;
 
+// Fetch the data from the API
 fetch('/api/v1.0/locations')
     .then(response => response.json())
     .then(data => {
         data.forEach(location => {
-            let ratio = location.Children_to_Doctor_Ratio;
             let lat = location.Latitude;
             let lng = location.Longitude;
+            let ratio = location.Children_to_Doctor_Ratio;
 
-            minRatio = Math.min(minRatio, ratio);
-            maxRatio = Math.max(maxRatio, ratio);
-
+            // Push the data into heatmapData array, format is [latitude, longitude, intensity]
             heatmapData.push([lat, lng, ratio]);
         });
 
-        plotHeatmap(heatmapData, minRatio, maxRatio);
+        // Create the heatmap layer and add it to the map
+        createHeatmap(heatmapData);
     })
     .catch(error => {
         console.error('Error fetching data:', error);
     });
 
-function plotHeatmap(data, minRatio, maxRatio) {
-    let svg = d3.select(map.getPanes().overlayPane).append('svg')
-        .attr('width', map.getSize().x)
-        .attr('height', map.getSize().y);
+// Function to create the heatmap using leaflet-heat
+function createHeatmap(data) {
+    // Create heatmap layer
+    let heatLayer = L.heatLayer(data, {
+        radius: 25, 
+        blur: 15,  
+        maxZoom: 13, 
+        gradient: {
+            0.0: 'green',   // Low ratio (children per doctor) - green
+            0.5: 'yellow',  // Mid ratio - yellow
+            1.0: 'red'      // High ratio (many children per doctor) - red
+        }
+    }).addTo(map);
 
-    let g = svg.append('g');
-
-    let radiusScale = d3.scaleLinear()
-        .domain([minRatio, maxRatio])
-        .range([5, 30]);
-
-    let colorScale = d3.scaleLinear()
-        .domain([minRatio, maxRatio])
-        .range(["green", "red"]);
-
-    let latLngToPoint = map.latLngToLayerPoint.bind(map);
-
-    let circles = g.selectAll('circle')
-        .data(data)
-        .enter().append('circle')
-        .attr('cx', d => latLngToPoint(L.latLng(d[0], d[1])).x)
-        .attr('cy', d => latLngToPoint(L.latLng(d[0], d[1])).y)
-        .attr('r', d => radiusScale(d[2]))
-        .style('fill', d => colorScale(d[2]))
-        .style('opacity', 0.6);
-
-    map.on('moveend', () => {
-        circles.attr('cx', d => latLngToPoint(L.latLng(d[0], d[1])).x)
-            .attr('cy', d => latLngToPoint(L.latLng(d[0], d[1])).y);
+    // Add interactivity (click event) on the heatmap
+    heatLayer.on('click', function(event) {
+        let latLng = event.latlng;
+        let nearestPoint = findNearestPoint(latLng, data);
+        if (nearestPoint) {
+            let ratio = nearestPoint[2];  // Children-to-doctor ratio
+            let popupContent = `Children to Doctor Ratio: ${ratio}`;
+            L.popup()
+                .setLatLng(latLng)
+                .setContent(popupContent)
+                .openOn(map);
+        }
     });
+}
 
-    map.on('resize', () => {
-        svg.attr('width', map.getSize().x)
-            .attr('height', map.getSize().y);
+// Function to find the nearest heatmap point to the clicked point
+function findNearestPoint(latLng, data) {
+    let closestPoint = null;
+    let minDistance = Infinity;
+    data.forEach(point => {
+        let pointLatLng = L.latLng(point[0], point[1]);
+        let distance = latLng.distanceTo(pointLatLng);
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestPoint = point;
+        }
     });
+    return closestPoint;
 }
