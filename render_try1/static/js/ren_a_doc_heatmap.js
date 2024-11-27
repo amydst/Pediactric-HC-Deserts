@@ -10,6 +10,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // Initialize an empty array for heatmap data
 let heatmapData = [];
+let minRatio = Infinity;
+let maxRatio = -Infinity;
 
 // Fetch the data from the API
 fetch('/api/v1.0/locations')
@@ -20,37 +22,46 @@ fetch('/api/v1.0/locations')
             let lng = location.Longitude;
             let ratio = location.Children_to_Doctor_Ratio;
 
-            // Push the data into heatmapData array, format is [latitude, longitude, intensity]
+            // Track the min/max ratios to adjust the color scale
+            minRatio = Math.min(minRatio, ratio);
+            maxRatio = Math.max(maxRatio, ratio);
+
+            // Push the data into heatmapData array
             heatmapData.push([lat, lng, ratio]);
         });
 
-        // Create the heatmap layer and add it to the map
-        createHeatmap(heatmapData);
+        // Create the heatmap layer with the dynamic color scale
+        createHeatmap(heatmapData, minRatio, maxRatio);
     })
     .catch(error => {
         console.error('Error fetching data:', error);
     });
 
-// Function to create the heatmap using leaflet-heat
-function createHeatmap(data) {
+// Create the heatmap using leaflet-heat:
+function createHeatmap(data, minRatio, maxRatio) {
+    
+    let gradient = {
+        0.0: 'green',      // Low ratio (fewer children per doctor)
+        0.2: 'light green',     // Slightly higher ratio
+        0.5: 'yellow',     // Medium ratio
+        0.8: 'orange',        // High ratio (many children per doctor)
+        1.0: 'red'     // Very high ratio
+    };
+
     // Create heatmap layer
     let heatLayer = L.heatLayer(data, {
-        radius: 25, 
-        blur: 15,  
-        maxZoom: 13, 
-        gradient: {
-            0.0: 'green',   // Low ratio (children per doctor) - green
-            0.5: 'yellow',  // Mid ratio - yellow
-            1.0: 'red'      // High ratio (many children per doctor) - red
-        }
+        radius: 25,        
+        blur: 20,          
+        maxZoom: 13,      
+        gradient: gradient 
     }).addTo(map);
 
-    // Add interactivity (click event) on the heatmap
+    // Interactivity 
     heatLayer.on('click', function(event) {
         let latLng = event.latlng;
         let nearestPoint = findNearestPoint(latLng, data);
         if (nearestPoint) {
-            let ratio = nearestPoint[2];  // Children-to-doctor ratio
+            let ratio = nearestPoint[2]; 
             let popupContent = `Children to Doctor Ratio: ${ratio}`;
             L.popup()
                 .setLatLng(latLng)
@@ -58,6 +69,9 @@ function createHeatmap(data) {
                 .openOn(map);
         }
     });
+
+    // Add a legend
+    addLegend(minRatio, maxRatio);
 }
 
 // Function to find the nearest heatmap point to the clicked point
@@ -73,4 +87,29 @@ function findNearestPoint(latLng, data) {
         }
     });
     return closestPoint;
+}
+
+// Function to add a legend to the map
+function addLegend(minRatio, maxRatio) {
+    let legend = L.control({ position: 'bottomright' });
+
+    legend.onAdd = function(map) {
+        let div = L.DomUtil.create('div', 'info legend');
+        let grades = [minRatio, (maxRatio - minRatio) * 0.2, (maxRatio - minRatio) * 0.5, (maxRatio - minRatio) * 0.8, maxRatio];
+        let labels = [];
+        let colors = ['green', 'yellow', 'orange', 'red', 'darkred'];
+
+        // Go through each range and make a label with a colored box for each range
+        for (let i = 0; i < grades.length; i++) {
+            labels.push(
+                '<i style="background:' + colors[i] + '"></i> ' +
+                Math.round(grades[i]) + ' - ' + Math.round(grades[i + 1] || maxRatio)
+            );
+        }
+
+        div.innerHTML = labels.join('<br>');
+        return div;
+    };
+
+    legend.addTo(map);
 }
