@@ -39,11 +39,10 @@ function normalize(ratio, minRatio, maxRatio) {
     return (ratio - minRatio) / (maxRatio - minRatio);
 }
 
-// Function to generate a color scale using D3.js for smoother transitions
+
 function getColor(ratio, minRatio, maxRatio) {
     const normalized = normalize(ratio, minRatio, maxRatio);
 
-    // Generate a color scale from green (low) to red (high) with more smooth transitions
     const colorScale = d3.scaleLinear()
         .domain([0, 0.2, 0.4, 0.6, 0.8, 1])
         .range(["green", "lightgreen", "yellow", "orange", "red", "brown"]);
@@ -58,8 +57,8 @@ function plotPoints(data, minRatio, maxRatio) {
         let lng = point.lng;
         let ratio = point.ratio;
 
-        // Create a circle marker with customized size, transparency and smoother color transitions
-        L.circleMarker([lat, lng], {
+       
+        let circleMarker = L.circleMarker([lat, lng], {
             radius: 18,  
             color: getColor(ratio, minRatio, maxRatio),  
             fillColor: getColor(ratio, minRatio, maxRatio),  
@@ -67,35 +66,15 @@ function plotPoints(data, minRatio, maxRatio) {
             weight: 4,  
             opacity: 0.1  
         }).addTo(map);
-    });
-}
 
-// Popup to display ratio on click
-map.on('click', function(event) {
-    let latLng = event.latlng;
-    let nearestPoint = findNearestPoint(latLng, pointsData);
-    if (nearestPoint) {
-        let ratio = nearestPoint.ratio;
-        let roundedRatio = Math.round(ratio);
-        let popupContent = `Children per Doctor: ${roundedRatio}`;
-        L.popup()
-            .setLatLng(latLng)
-            .setContent(popupContent)
-            .openOn(map);
-    }
-});
-
-// Find the nearest point from the clicked location
-function findNearestPoint(latLng, data) {
-    let closestPoint = null;
-    let minDistance = Infinity;
-    data.forEach(point => {
-        let pointLatLng = L.latLng(point.lat, point.lng);
-        let distance = latLng.distanceTo(pointLatLng);
-        if (distance < minDistance) {
-            minDistance = distance;
-            closestPoint = point;
-        }
+        // Add display data when clicked on the circle
+        circleMarker.on('click', function () {
+            let roundedRatio = Math.round(ratio);
+            let popupContent = `Children per Doctor: ${roundedRatio}`;
+            L.popup()
+                .setLatLng([lat, lng])
+                .setContent(popupContent)
+                .openOn(map);
+        });
     });
-    return closestPoint;
 }
