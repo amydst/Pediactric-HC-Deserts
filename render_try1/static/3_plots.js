@@ -13,19 +13,17 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
 
   // Mapping the relevant data to variables
   let poverty_rate = filteredData.map(item => item.Poverty_Rate);
-  let children_to_doctor_ratio = filteredData.map(item => item.Children_to_Doctor_Ratio);  // Changed from 'kids_per_doctor' to 'Children_to_Doctor_Ratio'
-  let zip_code = filteredData.map(item => item.Zip_Code);
-  let coverage_rate = filteredData.map(item => item.Coverage_Rate);  // Changed from 'insurance_coverage_rate' to 'Coverage_Rate'
+  let children_to_doctor_ratio = filteredData.map(item => item.Children_to_Doctor_Ratio);  
+  let coverage_rate = filteredData.map(item => item.Coverage_Rate); 
   let median_income = filteredData.map(item => item.Family_Median_Income);
-  let population_density = filteredData.map(item => item.Population_Density);
-
+  let population_density = filteredData.map(item => item.Population_Density); 
   init();
 
-  function init(){
+  function init() {
     drawPlot('poverty_rate'); // Default plot
   };
 
-  function drawPlot (variable){
+  function drawPlot(variable) {
     d3.select("#plot").html(""); // Clear the previous plot
     if (variable === 'poverty_rate') {
         drawPovertyRate();  // Fixed: was passing incorrect data argument

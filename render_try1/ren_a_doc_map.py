@@ -65,19 +65,19 @@ def get_locations():
             Demographics.zip_code,
             Population.population_under_18_years,
             Demographics.poverty_rate,
-            Demographics.insurance_coverage_rate,
+            Demographics.insurance_coverage_status,  
             Demographics.family_median_income,
             Population.population_density_per_sq_mile
         ).join(
             Population, Demographics.zip_code == Population.zip_code
         ).filter(
-            Demographics.coverage_rate != None,  # - coverage_rate is none
+            Demographics.coverage_rate != None,  # - coverage_rate is None
             Demographics.coverage_rate != 0,     # - coverage_rate is 0
             Demographics.count_of_licensees > 0  # - doctor count is 0
         ).all()
 
         locations = []
-        for latitude, longitude, count_of_licensees, coverage_rate, zip_code, population_under_18_years, poverty_rate, insurance_coverage_rate, family_median_income, population_density in results:
+        for latitude, longitude, count_of_licensees, coverage_rate, zip_code, population_under_18_years, poverty_rate, insurance_coverage_status, family_median_income, population_density in results:
             if count_of_licensees > 0:
                 # Calculate the children-to-doctor ratio
                 children_to_doctor_ratio = population_under_18_years / count_of_licensees
@@ -92,7 +92,7 @@ def get_locations():
                 "Coverage_Rate": coverage_rate,
                 "Zip_Code": zip_code,
                 "Poverty_Rate": poverty_rate,
-                "Insurance_Coverage_Rate": insurance_coverage_rate,
+                "Insurance_Coverage_Status": insurance_coverage_status,  # Sprawdzono, że kolumna to 'insurance_coverage_status'
                 "Family_Median_Income": family_median_income,
                 "Population_Density": population_density
             })
