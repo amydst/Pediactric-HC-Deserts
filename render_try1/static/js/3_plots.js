@@ -133,7 +133,7 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
 
       let poverty_layout = {
         title: "Poverty Rate vs Kids per Doctor Ratio",
-        xaxis: { title: 'Poverty Rate' % },
+        xaxis: { title: 'Poverty Rate %'},
         yaxis: { title: 'Kids per Doctor Ratio' }
       };
 
