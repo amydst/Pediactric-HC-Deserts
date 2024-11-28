@@ -92,7 +92,7 @@ def get_locations():
                 "Coverage_Rate": coverage_rate,
                 "Zip_Code": zip_code,
                 "Poverty_Rate": poverty_rate,
-                "Insurance_Coverage_Status": insurance_coverage_status,  # Sprawdzono, że kolumna to 'insurance_coverage_status'
+                "Insurance_Coverage_Status": insurance_coverage_status, 
                 "Family_Median_Income": family_median_income,
                 "Population_Density": population_density
             })

@@ -1,6 +1,7 @@
 fetch('/api/v1.0/locations')  // URL of the Flask API
 .then(response => {
   if (!response.ok) {
+    console.log('Error: Network response was not ok', response);
     throw new Error('Network response was not ok');
   }
   return response.json();
@@ -10,6 +11,7 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
 
   // I'm filtering all the values that have null children_to_doctor_ratio to make the graph look better
   let filteredData = data.filter(item => item.Children_to_Doctor_Ratio !== null && item.Children_to_Doctor_Ratio !== 0);
+  console.log('Filtered Data:', filteredData);  // Log filtered data to ensure correct filtering
 
   // Mapping the relevant data to variables
   let poverty_rate = filteredData.map(item => item.Poverty_Rate);
@@ -17,6 +19,13 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
   let coverage_rate = filteredData.map(item => item.Coverage_Rate); 
   let median_income = filteredData.map(item => item.Family_Median_Income);
   let population_density = filteredData.map(item => item.Population_Density); 
+
+  console.log('Poverty Rate:', poverty_rate);
+  console.log('Children to Doctor Ratio:', children_to_doctor_ratio);
+  console.log('Coverage Rate:', coverage_rate);
+  console.log('Median Income:', median_income);
+  console.log('Population Density:', population_density);
+
   init();
 
   function init() {
@@ -24,19 +33,23 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
   };
 
   function drawPlot(variable) {
+    console.log('Drawing plot for variable:', variable);  // Log which plot is being drawn
     d3.select("#plot").html(""); // Clear the previous plot
     if (variable === 'poverty_rate') {
-        drawPovertyRate();  // Fixed: was passing incorrect data argument
+        drawPovertyRate();  
     } else if (variable === 'family_income') {
         drawMedianIncome();
     } else if (variable === 'coverage_rate') {
         drawCoverageRate();
     } else if (variable === 'population_density') {
         drawPopulationDensity();
+    } else {
+        console.log('Unknown variable:', variable);  // Log if an unknown variable is passed
     }
   };
 
   function linearRegression(x, y) {
+    console.log('Performing linear regression with x:', x, 'and y:', y);  // Log input data for regression
     let size = x.length;
     let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
 
@@ -49,30 +62,36 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
         sumY2 += y[i] * y[i];
     }
 
+    console.log('Sum values: sumX:', sumX, 'sumY:', sumY, 'sumXY:', sumXY, 'sumX2:', sumX2, 'sumY2:', sumY2);
+
     // Calculate slope (m) and intercept (b)
     let slope = (size * sumXY - sumX * sumY) / (size * sumX2 - sumX * sumX);
     let intercept = (sumY - slope * sumX) / size;
 
     // Calculate correlation coefficient (r)
     let r = (size * sumXY - sumX * sumY) / Math.sqrt((size * sumX2 - sumX * sumX) * (size * sumY2 - sumY * sumY));
+    console.log('Linear regression results: slope:', slope, 'intercept:', intercept, 'r:', r);
 
     // Calculate R-squared
     let rSquared = r * r;
+    console.log('R-squared:', rSquared);
 
     // Calculate t-statistic for correlation coefficient
     let test = r * Math.sqrt((size - 2) / (1 - r * r));
 
     // Calculate p-value using jStat t-distribution
     let pValue = 2 * (1 - jStat.studentt.cdf(Math.abs(test), size - 2));
+    console.log('p-value:', pValue);
 
     // Return slope, intercept, r, rSquared and pValue
     return {slope, intercept, r, rSquared, pValue};
   }
 
-  //--------DRAW POVERTY RATE--------\\
   function drawPovertyRate() {
     let x = poverty_rate;
     let y = children_to_doctor_ratio;
+
+    console.log('Drawing Poverty Rate plot with x:', x, 'and y:', y);  // Log data for plot
 
     let poverty_trace = {
       x: x,
@@ -126,10 +145,11 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
     document.getElementById('pValue').textContent = `p-value: ${pValue.toFixed(15)}`;
   };
 
-  //--------DRAW COVERAGE RATE--------\\
   function drawCoverageRate() {
     let x = coverage_rate;
     let y = children_to_doctor_ratio;
+
+    console.log('Drawing Coverage Rate plot with x:', x, 'and y:', y);  // Log data for plot
     
     let coverage_trace = {
       x: x,
@@ -149,6 +169,7 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
         }
       }
     };
+
     // Calculate the regression line
     let { slope, intercept, r, rSquared, pValue } = linearRegression(x, y);
 
@@ -182,10 +203,11 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
     document.getElementById('pValue').textContent = `p-value: ${pValue.toFixed(15)}`;
   };
 
-  //--------DRAW MEDIAN INCOME--------\\
   function drawMedianIncome() {
     let x = median_income;
     let y = children_to_doctor_ratio;
+
+    console.log('Drawing Median Income plot with x:', x, 'and y:', y);  // Log data for plot
 
     let income_trace = {
       x: x,
@@ -233,10 +255,11 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
     Plotly.newPlot("plot", [income_trace, line_trace], income_layout);
   };
 
-  //--------DRAW POPULATION DENSITY--------\\
   function drawPopulationDensity() {
     let x = population_density;
     let y = children_to_doctor_ratio;
+
+    console.log('Drawing Population Density plot with x:', x, 'and y:', y);  // Log data for plot
 
     let density_trace = {
       x: x,
@@ -293,6 +316,7 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
   // Event listener for dropdown menu
   d3.select("#selDataset").on("change", function() {
     const selectedPlot = d3.select(this).property("value");
+    console.log('Selected plot:', selectedPlot);  // Log the selected plot
     drawPlot(selectedPlot);
   });
 });
