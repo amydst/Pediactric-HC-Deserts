@@ -46,7 +46,7 @@ def heatmap_page():
 
 @app.route("/plots")
 def plots_page():
-    return render_template("plots.html")
+    return render_template("3_plots.html")
 
 
 @app.route("/api/v1.0/locations")
