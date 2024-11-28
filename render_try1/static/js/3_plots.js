@@ -132,9 +132,9 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
       };
 
       let poverty_layout = {
-        title: "Poverty Rate vs Kids per Doctor",
-        xaxis: { title: 'Poverty Rate' },
-        yaxis: { title: 'Kids per Doctor' }
+        title: "Poverty Rate vs Kids per Doctor Ratio",
+        xaxis: { title: 'Poverty Rate' % },
+        yaxis: { title: 'Kids per Doctor Ratio' }
       };
 
       Plotly.newPlot("plot", [poverty_trace, line_trace], poverty_layout);
@@ -192,7 +192,7 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
       let coverage_layout = {
         title: "Insurance Coverage vs Kids per Doctor",
         xaxis: { title: 'Insurance Coverage Rate' },
-        yaxis: { title: 'Kids per Doctor' }
+        yaxis: { title: 'Kids per Doctor Ratio' }
       };
 
       Plotly.newPlot("plot", [coverage_trace, line_trace], coverage_layout);
@@ -248,9 +248,9 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
       };
 
       let income_layout = {
-        title: "Median Income vs Kids per Doctor",
-        xaxis: { title: 'Median Income' },
-        yaxis: { title: 'Kids per Doctor' }
+        title: "Median Family Income vs Kids per Doctor Ratio",
+        xaxis: { title: 'Median Family Income' },
+        yaxis: { title: 'Kids per Doctor Ratio' }
       };
 
       Plotly.newPlot("plot", [income_trace, line_trace], income_layout);
@@ -288,9 +288,9 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
       let regressionLine = x.map(xVal => slope * xVal + intercept);
 
       let density_layout = {
-        title: "Population density vs Kids per Doctor",
-        xaxis: { title: 'Population Density' },
-        yaxis: { title: 'Kids per Doctor' }
+        title: "Population density per sq mile vs Kids per Doctor Ratio",
+        xaxis: { title: 'Population Density per sq mile' },
+        yaxis: { title: 'Kids per Doctor Ratio' }
       };
 
       let line_trace = {
