@@ -7,7 +7,6 @@ import os
 
 app = Flask(__name__)
 
-
 CORS(app)
 
 # Get the DATABASE_URL environment variable set by Render
@@ -26,27 +25,30 @@ Base = automap_base()
 
 Base.prepare(autoload_with=engine)
 
-# Access the 'demographics' table (automatically mapped)
 Demographics = Base.classes.demographics
-# Same for the 'population' table:
 Population = Base.classes.population
 
-# Route for the home page
+
 @app.route("/")
 def home():
-    return render_template("home.html")  #home page with image and links
+    return render_template("home.html")
 
-# Route for the map page (displays the map with coverage layer)
+
 @app.route("/map")
 def map_page():
-    return render_template("map.html")  #coverage map will be shown
+    return render_template("map.html")
 
-# Route for the heatmap page (displays the heatmap layer)
+
 @app.route("/heatmap")
 def heatmap_page():
-    return render_template("heatmap.html")  # separate page for the heatmap
+    return render_template("heatmap.html")
 
-# API route to return data in JSON format
+
+@app.route("/plots")
+def plots_page():
+    return render_template("plots.html")
+
+
 @app.route("/api/v1.0/locations")
 def get_locations():
     # Create a new session to interact with the database
@@ -61,29 +63,38 @@ def get_locations():
             Demographics.count_of_licensees,
             Demographics.coverage_rate,
             Demographics.zip_code,
-            Population.population_under_18_years
+            Population.population_under_18_years,
+            Demographics.poverty_rate,
+            Demographics.insurance_coverage_rate,
+            Demographics.family_median_income,
+            Population.population_density_per_sq_mile
         ).join(
             Population, Demographics.zip_code == Population.zip_code
         ).filter(
             Demographics.coverage_rate != None,  # - coverage_rate is none
             Demographics.coverage_rate != 0,     # - coverage_rate is 0
-            Demographics.count_of_licensees > 0 # - doctor count is 0
+            Demographics.count_of_licensees > 0  # - doctor count is 0
         ).all()
 
         locations = []
-        for latitude, longitude, count_of_licensees, coverage_rate, zip_code, population_under_18_years in results:
+        for latitude, longitude, count_of_licensees, coverage_rate, zip_code, population_under_18_years, poverty_rate, insurance_coverage_rate, family_median_income, population_density in results:
             if count_of_licensees > 0:
                 # Calculate the children-to-doctor ratio
                 children_to_doctor_ratio = population_under_18_years / count_of_licensees
             else:
-                children_to_doctor_ratio = 0  
+                children_to_doctor_ratio = 0  # Set to 0 or handle as needed if doctor_count is None or 0
 
-            #locations list
+            # Append data for each location
             locations.append({
                 "Latitude": latitude,
                 "Longitude": longitude,
                 "Children_to_Doctor_Ratio": children_to_doctor_ratio,
-                "Coverage_Rate": coverage_rate
+                "Coverage_Rate": coverage_rate,
+                "Zip_Code": zip_code,
+                "Poverty_Rate": poverty_rate,
+                "Insurance_Coverage_Rate": insurance_coverage_rate,
+                "Family_Median_Income": family_median_income,
+                "Population_Density": population_density
             })
 
         # Return the data as JSON
@@ -96,6 +107,7 @@ def get_locations():
     finally:
         # Close the session to prevent memory leaks and ensure cleanup
         session.close()
+
 
 # Run the Flask app
 if __name__ == "__main__":
