@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>California Pediatrician plots</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <title>Event Listeners</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"></script>
+
+
+  <!-- Your custom CSS, if you have one -->
+  <link rel="stylesheet" type="text/css" href="scatter_plots.css">
+  
+  <style>
+    body, html {
+      height: 100%;
+      margin: 25;
+    }
+
+    #plot {
+      height: 80%;
+      width: 80%;   
+      margin: 0 auto;
+    }
+    
+    #results{
+      height: 20%;
+      margin: auto;
+    }
+
+  </style>
+</head>
+
+<body>
+  
+  <!-- The plot container, we can add title here later -->
+
+  <select id="selDataset">
+    <option value="poverty_rate">Poverty Rate</option>
+    <option value="family_income">Family Median Income</option>
+    <option value="coverage_rate">Insurance Coverage Rate</option>
+    <option value="population_density">Total Population Density</option>
+  </select>
+
+  <div id="plot"></div>
+
+  <!-- HTML elements to display the R-squared and p-value -->
+  <div id="results">
+    <h3 id="rSquared">R-squared:</p>
+    <h3 id="pValue">p-value: </p>
+  </div>
+
+  <!-- JavaScript file with the plot logic -->
+  <script src="scatter_plots.js"></script>
+</body>
+
+</html>
