@@ -7,7 +7,7 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
     return response.json();
   })
   .then(data => {
-    console.log('Data from API:', data);  // Log the data to check what exactly the API returns
+    console.log('Data from API:', data);  // Check what API returns
 
     // I'm filtering all the values that have null children_to_doctor_ratio to make the graph look better
     let filteredData = data.filter(item => item.Children_to_Doctor_Ratio !== null && item.Children_to_Doctor_Ratio !== 0);
@@ -260,12 +260,12 @@ fetch('/api/v1.0/locations')  // URL of the Flask API
       let x = population_density;
       let y = children_to_doctor_ratio;
 
-      console.log('Drawing Population Density plot with x:', x, 'and y:', y);  // Log data for plot
+      console.log('Drawing Population Density plot with x:', x, 'and y:', y); 
 
       let density_trace = {
         x: x,
         y: y,
-        text: zip_codes,  // Use zip codes here
+        text: zip_codes, 
         mode: 'markers',
         type: 'scatter',
         name: 'Zip codes',

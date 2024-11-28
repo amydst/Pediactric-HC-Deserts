@@ -50,7 +50,7 @@ function getColor(ratio, minRatio, maxRatio) {
     return colorScale(normalized);
 }
 
-// Function to plot points on the map with color depending on ratio
+// Plot points on the map with color depending on ratio
 function plotPoints(data, minRatio, maxRatio) {
     data.forEach(point => {
         let lat = point.lat;

@@ -8,7 +8,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
-// Create a layer group for coverage circles (this allows us to toggle the layer on/off)
+// Toggle the layer on/off)
 let coverageLayer = L.layerGroup();  // For Coverage Rate
 
 
