@@ -19,9 +19,9 @@ function getCoverageRadius(coverageRate) {
 
 // Color circles based on coverage rate
 function getCoverageColor(coverageRate) {
-    if (coverageRate > 90) return '#0000FF';  // Blue
-    if (coverageRate > 70) return '#FFFF00';  // Yellow
-    if (coverageRate > 50) return '#FF0000';  // Red
+    if (coverageRate > 90) return '#E0FFFF';  // light blue
+    if (coverageRate > 70) return '#IE90FF';  // blue
+    if (coverageRate > 50) return '#000080';  // Navy
     return '#800000';  // Dark Red 
 }
 
