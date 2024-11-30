@@ -10,6 +10,9 @@
 
   <!-- Your custom CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/ren_a_doc_map.css') }}">
+
+  <!-- D3.js (required for the color scale) -->
+  <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body class="map-page">
   <div id="map"></div>  <!-- Map will be here -->
@@ -17,7 +20,7 @@
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
-  <!-- Your custom JS -->
+  <!-- Custom JS -->
   <script src="{{ url_for('static', filename='js/ren_a_doc_map.js') }}"></script>
 </body>
-</html> 
+</html>

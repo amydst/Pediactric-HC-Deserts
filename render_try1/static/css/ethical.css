@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, sans-serif; /* Use Arial font, or any sans-serif font if it's not available */
+    margin: 0; /* No space around the edges of the body */
+    padding: 0; /* No padding inside the body */
+    display: flex; /* Use Flexbox for layout */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    height: 100vh; /* Make the body take up the whole screen height */
+    background-image: url('/static/images/ethical.jpg'); /* Set a background image */
+    background-size: cover; /* Make the image cover the whole page */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Don't repeat the background image */
+}
+
+.container {
+    text-align: center; /* Center-align the text inside the container */
+    max-width: 700px; /* Limit the container's width to 700px */
+    margin: 0 auto; /* Center the container horizontally */
+}
+
+.letter {
+    background-color: #ececec; /* Light gray background for the letter */
+    padding: 10px; /* Add space inside the letter */
+    border-radius: 10px; /* Make the corners rounded */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow to the letter */
+    width: 100%; /* Make the letter take up the full width of its container */
+    margin-top: 20px; /* Add some space above the letter */
+}
+
+#letterText {
+    margin-top: 10px; /* Add some space above the letter text */
+    background-color: #fff; /* White background for the text */
+    border: 1px solid #ddd; /* Light gray border around the text */
+    padding: 15px; /* Add space inside the text area */
+    border-radius: 5px; /* Make the corners rounded */
+    max-width: 500px; /* Limit the width of the text box to 500px */
+    margin: 0 auto; /* Center the text box horizontally */
+    display: none; /* Hide the text box by default */
+    opacity: 0; /* Make the text box invisible by default */
+    transition: opacity 0.3s ease; /* Make the text box fade in/out smoothly */
+}
+
+.hidden {
+    display: none; /* Hide the element when it has the 'hidden' class */
+}
+
+button {
+    padding: 10px 20px; /* Add padding to the button */
+    font-size: 16px; /* Set the font size to 16px */
+    cursor: pointer; /* Change the mouse pointer to a hand when hovering */
+    background-color: black; /* Set the button background to black */
+    color: white; /* Set the button text color to white */
+    border: none; /* Remove the border from the button */
+    border-radius: 5px; /* Round the corners of the button */
+    transition: background-color 0.3s; /* Make the background color change smoothly */
+}
+
+button:hover {
+    background-color: #45a049; /* Change the button color when hovered to a green shade */
+}
+
+h1 {
+    color: white; /* Make the heading text white */
+    font-size: 36px; /* Set the font size of the heading */
+    font-weight: bold; /* Make the heading bold */
+    margin-bottom: 20px; /* Add space below the heading */
+}
+
+li {
+    font-size: 20px; /* Set the font size of list items to 20px */
+    margin-bottom: 10px; /* Add space between list items */
+}

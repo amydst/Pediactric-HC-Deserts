@@ -10,16 +10,8 @@ app = Flask(__name__)
 CORS(app)
 
 # Get the DATABASE_URL environment variable set by Render
-database_url = os.getenv("DATABASE_URL")
+engine = create_engine("postgresql://postgres:postgres@localhost:5433/Healthcare_deserts_schema")
 
-# Uncomment and replace with your local database URL if necessary:
-# database_url = "postgresql://alex:5ZsVuAhs533DtUbfOOw8hVl1daKSyuIr@dpg-ct202f56l47c73bj3l50-a.oregon-postgres.render.com/healthcare_deserts_schema"
-
-# Check if the DATABASE_URL is available, if not raise an error
-if not database_url:
-    raise ValueError("DATABASE_URL environment variable is not set.")
-
-engine = create_engine(database_url)
 
 Base = automap_base()
 
@@ -39,14 +31,14 @@ def map_page():
     return render_template("map.html")
 
 
-@app.route("/heatmap")
-def heatmap_page():
-    return render_template("heatmap.html")
-
-
 @app.route("/plots")
 def plots_page():
     return render_template("3_plots.html")
+
+
+@app.route("/ethical_implications")
+def ethical_implications():
+    return render_template("ethical.html")
 
 
 @app.route("/api/v1.0/locations")
@@ -111,4 +103,4 @@ def get_locations():
 
 # Run the Flask app
 if __name__ == "__main__":
-    app.run(debug=False, host='0.0.0.0', port=10000)
+    app.run(debug=True, host='127.0.0.1', port=5000)
