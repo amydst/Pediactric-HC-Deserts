@@ -15,8 +15,8 @@ References for any code used that is not your own
 
 
 ### **Project Overview:** 
-Pediatricians are specially trained to provide optimal care for children, and research shows that pediatric care leads to better health outcomes for children compared to care provided by general or family doctors. Specialized pediatric care not only benefits children's health, but it also proves to be more cost-effective for families, insurance companies, and government programs.
-California is home to some of the nation's top hospitals and offers a robust Medicaid program—Medi-Cal—that provides healthcare coverage to low-income residents, individuals with disabilities, and all children under the age of 21. Despite these efforts, there are still significant areas of the state where access to pediatric care is limited.
+Pediatricians are specially trained to provide optimal care for children, and research shows that pediatric care leads to better health outcomes for children compared to care provided by general or family doctors. Specialized pediatric care not only benefits children's health, but it also proves to be more cost-effective for families, insurance companies, and government programs.<sup>1,8</sup>
+California is home to some of the nation's top hospitals and offers a robust Medicaid program—Medi-Cal—that provides healthcare coverage to low-income residents, individuals with disabilities, and all children under the age of 21.<sup>6,7</sup> Despite these efforts, there are still significant areas of the state where access to pediatric care is limited.
 This project aims to investigate the socioeconomic factors that may contribute to the existence of pediatric healthcare deserts in California. Specifically, we seek to understand how variables such as poverty rates, family income, population density, and insurance coverage might influence the distribution of pediatricians across the state, and identify the regions where children are underserved.
 
 
@@ -37,12 +37,16 @@ This project aims to investigate the socioeconomic factors that may contribute t
 
 ### **Hypothesis:**
 **-Poverty Rate:** Zip codes with lower poverty levels will have less kids per doctor.
+    What we found: The relationship is weak, only 5.14% of the variance of the Ratio of Kids per Doctor can be attributed to the Poverty rate but, with a p-value of 3.17 x 10⁻¹²,  it is significant. In other words,  the relationship, even though it is small, is not due to chance.
 
 **-Family Median Income:** Zip codes with higher family median income will have less kids per doctor.
+    What we found: Similar to Poverty Rate, the relationship is weak, R-squared is only 0.080, but it is not due to chance, since we got a p-value of  < 0.000
 
 **-Population Density:** Higher density zip codes will have less kids per doctor.
+    What we found: With a R-squared value of 0.00009 and a p-value of 0.770, we cannot reject the null-hypothesis, meaning the very weak relationship between these two variables is most likely due to chance.
 
 **-Insurance coverage:**  Zip codes with higher insurance coverage will have less kids per doctor.
+    What we found: Very similarly than with Population density, we cannot reject the null-hypothesis for this variable, we got a R-squared value of 0.00009 and a p-value of 0.771
 
 ### **How to use and interact with the project:**
 
@@ -72,11 +76,9 @@ California Health and Human Services Open Data Portal: https://data.chhs.ca.gov/
 **All other variables:** Everything else was retrieved from the Census Bureau portal:
 https://data.census.gov/advanced?g=040XX00US06$8600000.
 
-### **References:**
+### **Literature References:**
 
-1. DeAngelis, C. ∙ Feigin, R. ∙ DeWitt, T. ...
-Final report of the FOPE II Pediatric Workforce Workgroup
-Pediatrics. 2000; 106:1245-1255
+1. DeAngelis, C. ∙ Feigin, R. ∙ DeWitt, T. Final report of the FOPE II Pediatric Workforce Workgroup Pediatrics. 2000; 106:1245-1255
 https://www.jpeds.com/article/S0022-3476(04)00908-4/pdf
 
 2. Census Bureau - Subject Definitions: https://www.census.gov/programs-surveys/cps/technical-documentation/subject-definitions.html#
@@ -87,4 +89,13 @@ https://www.jpeds.com/article/S0022-3476(04)00908-4/pdf
 
 5. CalHHS - Terms of Use: https://data.chhs.ca.gov/pages/terms
 
+6. Statista Ranking Best Hospitals in the U.S. 2024 https://www.newsweek.com/rankings/worlds-best-hospitals-2024/united-states
 
+7. What is the difference between Medicare and Medi-cal? https://www.alignmenthealthplan.com/discover-ahp/medicare-advantage-faqs/medicare-vs-medical
+
+8. Pediatrician vs Family Doctor https://www.pediatricandadolescentmedicine.net/About-Us/Blog/June-2023/Pediatrician-vs-Family-Doctor
+
+
+### **Code References:**
+
+We used code from the different activities shown in class, used the assistance of ChatGPT and Xpert Learning Assistant.
