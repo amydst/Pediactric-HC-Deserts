@@ -10,10 +10,12 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // Making empty group for layers:
 let coverageLayer = L.layerGroup();  
+let doctorRatioLayer = L.layerGroup();  
+let combinedLayer = L.layerGroup();  // This is the new combined layer for population density and doctor ratio
 
-// Function to create the custom triangle marker
+// Function to create the custom triangle marker for coverageRate
 function getCoverageMarker(coverageRate) {
-    const size = Math.max(15, 50 - coverageRate / 2);  // Dynamic size based on coverage rate
+    const size = Math.max(10, 30 - coverageRate / 2);  // Smaller size based on coverage rate
 
     // Creating a triangle icon using HTML and CSS
     const triangleIcon = L.divIcon({
@@ -45,7 +47,7 @@ function createCoverageTriangle(location) {
     .addTo(coverageLayer);  // Adding the marker to the coverage layer
 }
 
-// Fetching data from the API and creating markers
+// Fetching data from the API and creating markers for coverage
 fetch('/api/v1.0/locations')
     .then(response => response.json())
     .then(data => {
@@ -57,26 +59,24 @@ fetch('/api/v1.0/locations')
         console.error('Error fetching data:', error);
     });
 
-// Making 2 layer Children to doctor:
-let doctorRatioLayer = L.layerGroup();  // Creating empty group 
-
-// Normalize ratio (0-1)
+// Function to normalize ratio (0-1)
 function normalize(ratio, minRatio, maxRatio) {
     return (ratio - minRatio) / (maxRatio - minRatio);
 }
 
-// Assigning color based on ratio to spots: 
+// Assigning color scale for Children per Doctor (from green to red)
 function getDoctorRatioColor(ratio, minRatio, maxRatio) {
     const normalized = normalize(ratio, minRatio, maxRatio);
-
+    
+    // Define a color scale from green to red
     const colorScale = d3.scaleLinear()
         .domain([0, 0.2, 0.4, 0.6, 0.8, 1])  //normalized values
-        .range(["green", "lightgreen", "yellow", "orange", "red", "brown"]); //color based on this normalized values
+        .range(["green", "lightgreen", "yellow", "orange", "red", "brown"]);
 
     return colorScale(normalized);
 }
 
-// Creating circles for Children - Doctor-Ratio
+// Creating circles for Children - Doctor Ratio
 function createDoctorRatioCircle(location, minRatio, maxRatio) {
     let ratio = location.Children_to_Doctor_Ratio;
     let lat = location.Latitude;
@@ -94,7 +94,7 @@ function createDoctorRatioCircle(location, minRatio, maxRatio) {
     .addTo(doctorRatioLayer);  // Adding circle to layer
 }
 
-// Taking data from the API and creating layer:
+// Taking data from the API and creating layer for doctor ratio markers
 fetch('/api/v1.0/locations')
     .then(response => response.json())
     .then(data => {
@@ -118,8 +118,74 @@ fetch('/api/v1.0/locations')
         console.error('Error fetching data:', error);
     });
 
-// Control panel to turn on/off layers: 
+// Creating the combined marker based on Population Density and Children per Doctor Ratio
+function createCombinedMarker(location, minRatio, maxRatio) {
+    let populationDensity = location.Population_Density;
+    let doctorRatio = location.Children_to_Doctor_Ratio;
+
+    // Round the population density to 0 decimal places
+    // and round the children to doctor ratio to 1 decimal place
+    populationDensity = Math.round(populationDensity);  // Round population density
+    doctorRatio = doctorRatio.toFixed(1);  // Round children to doctor ratio to 1 decimal place
+
+    // Calculate size based on Population Density (scaled to a reasonable range)
+    const size = Math.min(30, Math.max(6, location.Population_Density / 1500));  // Smaller size for combined layer
+    
+    // Get color based on doctor ratio with the new blue-red scale
+    const color = getCombinedColor(doctorRatio, minRatio, maxRatio);
+    
+    // Create a circle marker for the combined layer
+    L.circleMarker([location.Latitude, location.Longitude], {
+        radius: size,  // Size based on Population Density
+        color: color,  // Color based on Children to Doctor Ratio with new scale
+        fillColor: color,
+        fillOpacity: 0.6,
+        weight: 1
+    })
+    .bindPopup(`<b>Population Density per 1 square mile: ${populationDensity}</b><br><b>Children to Doctor Ratio: ${doctorRatio}</b>`)
+    .addTo(combinedLayer);  // Add to combined layer
+}
+
+// Assigning color scale for Population Density (from blue to red)
+function getCombinedColor(ratio, minRatio, maxRatio) {
+    const normalized = normalize(ratio, minRatio, maxRatio);
+
+    // Define a color scale from blue to red
+    const colorScale = d3.scaleLinear()
+        .domain([0, 0.2, 0.4, 0.6, 0.8, 1])  // Normalized values
+        .range(["#ffffcc", "#ffff00", "#ff9900", "#ff3300", "#b35c00", "#4b2a00"]);  // blue -> yellow -> red
+
+    return colorScale(normalized);
+}
+
+// Fetching data and creating markers for the combined layer
+fetch('/api/v1.0/locations')
+    .then(response => response.json())
+    .then(data => {
+        let pointsData = [];
+        let minRatio = Infinity;
+        let maxRatio = -Infinity;
+
+        // Find min and max ratio for color normalization
+        data.forEach(location => {
+            let ratio = location.Children_to_Doctor_Ratio;
+            minRatio = Math.min(minRatio, ratio);
+            maxRatio = Math.max(maxRatio, ratio);
+            pointsData.push(location);
+        });
+
+        // Create the combined markers for each location
+        pointsData.forEach(location => {
+            createCombinedMarker(location, minRatio, maxRatio);
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching data:', error);
+    });
+
+// Control panel to turn on/off layers
 L.control.layers(null, {
     "Percentage of insured children": coverageLayer,
-    "Children per doctor": doctorRatioLayer
+    "Children per doctor": doctorRatioLayer,  // Ensure this layer is available in the control panel
+    "Population Density vs Children to Doctor Ratio": combinedLayer  // Adding the new combined layer
 }).addTo(map);
