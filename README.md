@@ -1,13 +1,3 @@
-# Project_3
-
-
-
-An overview of the project and its purpose
-Instructions on how to use and interact with the project
-At least one paragraph summarizing efforts for ethical considerations made in the project.
-References for the data source(s)
-References for any code used that is not your own
-
 # Access to Pediatric Care in California: Analyzing the Socioeconomic Factors Behind Healthcare Deserts
 ## Project 3: Group 1. Data visualization track
 ## Amy Dos Santos, Chloe King, Aleksandra Kutz, Carmen Dual
