@@ -11,9 +11,18 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // Making empty group for layers:
 let coverageLayer = L.layerGroup();  
 
-// Making circles - size depends on coverage rate, but not smaller than 1000
-function getCoverageRadius(coverageRate) {
-    return Math.max(1000, 4000 - coverageRate * 7);
+// Function to create the custom triangle marker
+function getCoverageMarker(coverageRate) {
+    const size = Math.max(15, 50 - coverageRate / 2);  // Dynamic size based on coverage rate
+
+    // Creating a triangle icon using HTML and CSS
+    const triangleIcon = L.divIcon({
+        className: 'coverage-triangle',  // Custom class
+        html: `<div style="width: 0; height: 0; border-left: ${size}px solid transparent; border-right: ${size}px solid transparent; border-bottom: ${size * 1.5}px solid ${getCoverageColor(coverageRate)};"></div>`,
+        iconSize: [size * 2, size * 1.5]  // Width and height based on size of triangle
+    });
+
+    return triangleIcon;
 }
 
 // Making color depends on coverage rate:
@@ -24,26 +33,24 @@ function getCoverageColor(coverageRate) {
     return '#000000';  // Black
 }
 
-// Making circle for each location based on lon and lan and coverage rate and set the color of the circles:
-function createCoverageCircle(location) {
+// Creating triangle for each location based on lat, lon, and coverage rate
+function createCoverageTriangle(location) {
     let coverageRate = location.Coverage_Rate;
-    L.circle([location.Latitude, location.Longitude], {
-        color: getCoverageColor(coverageRate),
-        fillColor: getCoverageColor(coverageRate),
-        fillOpacity: 0.7,  
-        weight: 0,  
-        radius: getCoverageRadius(coverageRate)  
+    let coverageMarker = getCoverageMarker(coverageRate);
+
+    L.marker([location.Latitude, location.Longitude], {
+        icon: coverageMarker  // Use the custom triangle icon
     })
-    .bindPopup('<b>Coverage Rate: ' + coverageRate.toFixed(2) + '%</b>')  //toFixed round the number to .00
-    .addTo(coverageLayer);  // Adding circle to layer
+    .bindPopup('<b>Coverage Rate: ' + coverageRate.toFixed(2) + '%</b>')  // Showing coverage rate in the popup
+    .addTo(coverageLayer);  // Adding the marker to the coverage layer
 }
 
-// taking datas form API:
+// Fetching data from the API and creating markers
 fetch('/api/v1.0/locations')
     .then(response => response.json())
     .then(data => {
         data.forEach(location => {
-            createCoverageCircle(location);
+            createCoverageTriangle(location);
         });
     })
     .catch(error => {
@@ -69,7 +76,7 @@ function getDoctorRatioColor(ratio, minRatio, maxRatio) {
     return colorScale(normalized);
 }
 
-// Making circles for Children - Doctor-Ratio
+// Creating circles for Children - Doctor-Ratio
 function createDoctorRatioCircle(location, minRatio, maxRatio) {
     let ratio = location.Children_to_Doctor_Ratio;
     let lat = location.Latitude;
@@ -87,7 +94,7 @@ function createDoctorRatioCircle(location, minRatio, maxRatio) {
     .addTo(doctorRatioLayer);  // Adding circle to layer
 }
 
-// Taking datas form Api and creating layer:
+// Taking data from the API and creating layer:
 fetch('/api/v1.0/locations')
     .then(response => response.json())
     .then(data => {
@@ -111,7 +118,7 @@ fetch('/api/v1.0/locations')
         console.error('Error fetching data:', error);
     });
 
-// Control panel to turn on/ off layers: 
+// Control panel to turn on/off layers: 
 L.control.layers(null, {
     "Percentage of insured children": coverageLayer,
     "Children per doctor": doctorRatioLayer
