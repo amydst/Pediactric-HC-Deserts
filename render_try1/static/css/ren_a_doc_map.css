@@ -1,4 +1,4 @@
-body {
+html, body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -6,9 +6,8 @@ body {
   color: black;
 }
 
-/* Homepage styling */
 .home-page {
-  background-image: url("/static/images/pediatrician.jpg"); /* Full path to image */
+  background-image: url("/static/images/pediatrician.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -18,38 +17,39 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;  /* Center-align the content */
   padding: 0;
 }
 
-/* New text overlay styling */
 .text-overlay {
-  background-color: #f2e1c1;  /* Creamy color background */
-  width: 100%;  /* Full width of the screen */
-  height: 27%;  /* height */
-  padding: 20px 20px;  /* text */
+  /* Półprzezroczyste tło pod tekstem */
+  background-color: rgba(255, 255, 255, 0.7);  /* Slightly transparent white */
+  width: 80%;  /* Set a smaller width to leave space for background image on the sides */
+  max-width: 1200px;  /* Maximum width to control text area */
+  padding: 20px;
   position: absolute;
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%); /* Center the text overlay horizontally */
   z-index: 2;
   color: black;
   text-align: center;
 }
 
 .text-overlay h1 {
-  font-size: 1.6rem;  /* Font size */
+  font-size: 1.6rem;
   margin: 0;
   padding-bottom: 10px;
 }
 
 .text-overlay .subtitle {
-  font-size: 2.5rem;  /* Font size */
+  font-size: 2.5rem;
   font-weight: bold;
   margin: 10px 0;
 }
 
 .text-overlay p {
-  font-size: 1rem;  /* Font size */
+  font-size: 1rem;
   margin: 5px 0;
   line-height: 1.5;
 }
@@ -63,17 +63,14 @@ body {
   text-decoration: underline;
 }
 
-/* Map page styling */
 .map-page {
   background-image: none;
 }
 
-/* Heatmap page styling */
 .heatmap-page {
-  background-image: none;  
+  background-image: none;
 }
 
-/* Full screen map */
 #map {
   width: 100vw;
   height: 100vh;
@@ -85,7 +82,6 @@ body {
   padding: 0;
 }
 
-/* Styling for heatmap legend */
 #legend {
   position: absolute;
   top: 10px;
@@ -93,7 +89,7 @@ body {
   background-color: rgba(255, 255, 255, 0.8);
   padding: 15px;
   border-radius: 10px;
-  z-index: 2;  /* Ensure it's above the map */
+  z-index: 2;
   font-family: Arial, sans-serif;
   font-size: 14px;
   max-width: 250px;
@@ -101,14 +97,12 @@ body {
   color: black;
 }
 
-/* Title and description within legend */
 #legend h3 {
   margin: 0 0 10px 0;
   font-size: 16px;
   font-weight: bold;
 }
 
-/* Style for individual legend color boxes */
 #legend div {
   font-size: 14px;
   margin-bottom: 8px;
@@ -123,7 +117,6 @@ body {
   display: inline-block;
 }
 
-/* Make legend responsive for smaller screens */
 @media (max-width: 768px) {
   #legend {
     top: 15px;
@@ -136,19 +129,31 @@ body {
   #legend div {
     margin-bottom: 5px;
   }
+
+  .text-overlay h1 {
+    font-size: 1.2rem;
+  }
+
+  .text-overlay .subtitle {
+    font-size: 2rem;
+  }
+
+  .text-overlay p {
+    font-size: 0.9rem;
+  }
+
+  #map {
+    height: 100vh;
+    width: 100%;
+  }
 }
 
-/* Style for the popup on map clicks (for Children to Doctor ratio) */
 .leaflet-popup-content {
   font-size: 14px;
   font-family: Arial, sans-serif;
   text-align: center;
 }
-
-/* Ensure map is fully responsive */
-@media (max-width: 768px) {
-  #map {
-    height: 100vh;
-    width: 100%;
-  }
+.text-overlay h2 {
+  font-size: 2.5rem;
+  font-size: 160%; 
 }
