@@ -72,8 +72,8 @@ function getDoctorRatioColor(ratio, minRatio, maxRatio) {
     
     // Define a color scale from green to red
     const colorScale = d3.scaleLinear()
-        .domain([0, 0.2, 0.4, 0.6, 0.8, 1])  //normalized values
-        .range(["green", "lightgreen", "yellow", "orange", "red", "brown"]);
+        .domain([0, 0.1, 0.2, 0.4, 0.6, 0.8, 1])  //normalized values
+        .range(["green", "yellow", "orange", "red", "brown", "#8B0000", "black"]);
 
     return colorScale(normalized);
 }
@@ -155,7 +155,7 @@ function getCombinedColor(ratio, minRatio, maxRatio) {
     // Define a color scale from blue to red
     const colorScale = d3.scaleLinear()
         .domain([0, 0.2, 0.4, 0.6, 0.8, 1])  // Normalized values
-        .range(["#ffffcc", "#ffff00", "#ff9900", "#ff3300", "#b35c00", "#4b2a00"]);  // blue -> yellow -> red
+        .range(["lightgreen", "#ffff00", "#ff9900", "#ff3300", "#b35c00", "#4b2a00"]);  // 
 
     return colorScale(normalized);
 }
@@ -462,8 +462,8 @@ let legendDoctorRatio = L.control({ position: 'bottomright' });
 
 legendDoctorRatio.onAdd = function() {
     let div = L.DomUtil.create('div', 'info legend');
-    grades = [0, 0.2, 0.4, 0.6, 0.8, 1];  // Normalized ratio values
-    let colors = ['green', 'lightgreen', 'yellow', 'orange', 'red', 'brown'];  // Colors for doctor ratio
+    grades = [0, 0.1, 0.2, 0.4, 0.6, 0.8, 1];  // Normalized ratio values
+    let colors = ["green", "yellow", "orange", "red", "brown", "#8B0000", "black"];  // Colors for doctor ratio
 
     // Add legend title
     div.innerHTML += '<h4>Children per Doctor Ratio</h4>';
@@ -507,7 +507,7 @@ legendCombined.onAdd = function() {
     let sizeLabels = ['< 1000', '1000-3000', '3000-5000', '5000-7000', '> 7000'];
     
     let colorGrades = [0, 0.2, 0.4, 0.6, 0.8, 1];
-    let colorScale = ['#ffffcc', '#ffff00', '#ff9900', '#ff3300', '#b35c00', '#4b2a00'];
+    let colorScale = ['lightgreen', '#ffff00', '#ff9900', '#ff3300', '#b35c00', '#4b2a00'];
 
     div.innerHTML += '<h4>Combined: Population Density vs Children-to-Doctor Ratio</h4>';
 
