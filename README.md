@@ -1,6 +1,6 @@
 # Access to Pediatric Care in California: Analyzing the Socioeconomic Factors Behind Healthcare Deserts
 ## Project 3: Group 1. Data visualization track
-## Amy Dos Santos, and  Aleksandra Kutz
+## Amy Dos Santos, Aleksandra Kutz, Carmen Dual, Chloe King.
 
 https://project-3-tbuy.onrender.com/
 
