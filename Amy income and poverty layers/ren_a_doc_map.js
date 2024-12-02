@@ -12,7 +12,8 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let coverageLayer = L.layerGroup();  
 let doctorRatioLayer = L.layerGroup();  
 let combinedLayer = L.layerGroup();  // This is the new combined layer for population density and doctor ratio
-let medianIncomeLayer = L.layerGroup();
+let medianIncomeLayer = L.layerGroup(); /* Median Income Layer added */
+let povertyRateLayer = L.layerGroup(); /* Poverty Rate Layer added */
 
 // Function to create the custom triangle marker for coverageRate
 function getCoverageMarker(coverageRate) {
@@ -184,23 +185,7 @@ fetch('/api/v1.0/locations')
         console.error('Error fetching data:', error);
     });
 
-function getIncomeColors(ratio, minRatio, maxRatio) {
-    const normalized = normalize(ratio, minRatio, maxRatio);
-
-    // Define a color scale from blue to red
-    let colorScale = d3.scaleLinear()
-        .domain([0, 0.2, 0.4, 0.6, 0.8, 1])  // Normalized values
-        .range(['skyblue','cornflowerblue','dodgerblue','blue', 'mediumblue','midnightblue']);
-
-    return colorScale(normalized);
-}
-
-function scaleIncomeToRadius(income) {
-    if (income < 20000) return 5; // Minimum radius
-    if (income < 50000) return 10; // Medium radius
-    if (income < 100000) return 15; // Larger radius
-    return 20; // Maximum radius
-}
+////////////////////////// MEDIAN INCOME LAYER STARTS HERE ///////////////////////
 
 // Function to create layer of median income 
 function createMarkerMedianIncome(incomeData) {
@@ -291,6 +276,23 @@ function createMarkerMedianIncome(incomeData) {
     medianIncomeLayer.on('remove', updateLegendVisibility);
 }
 
+function getIncomeColors(ratio, minRatio, maxRatio) {
+    const normalized = normalize(ratio, minRatio, maxRatio);
+
+    // Define a color scale of different blues
+    let colorScale = d3.scaleLinear()
+        .domain([0, 0.2, 0.4, 0.6, 0.8, 1])  // Normalized values
+        .range(['skyblue','cornflowerblue','dodgerblue','blue', 'mediumblue','midnightblue']);
+
+    return colorScale(normalized);
+}
+
+function scaleIncomeToRadius(income) {
+    if (income < 20000) return 5; // Minimum radius
+    if (income < 50000) return 10; // Medium radius
+    if (income < 100000) return 15; // Larger radius
+    return 20; // Maximum radius
+}
 
 // Fetching data and creating markers
 d3.json('/api/v1.0/locations')
@@ -298,10 +300,121 @@ d3.json('/api/v1.0/locations')
     createMarkerMedianIncome(data);
 });
 
+////////////////////////// MEDIAN INCOME LAYER ENDS HERE ///////////////////////
+
+//////////////////// POVERTY RATE LAYER STARTS HERE ////////////////////////////
+
+// Function to create layer of Poverty Rate 
+function createMarkerPovertyRate(povertyData) {
+    var povertyMarkers = [];
+    let minRatio = Infinity; // Initialize minRatio
+    let maxRatio = -Infinity; // Initialize maxRatio
+
+    // First pass to determine min and max doctor ratios
+    povertyData.forEach(function(povertyData) {
+        let doctorRatio = povertyData.Children_to_Doctor_Ratio;
+        minRatio = Math.min(minRatio, doctorRatio);
+        maxRatio = Math.max(maxRatio, doctorRatio);
+    });
+
+    // Second pass to create markers
+    povertyData.forEach(function(povertyData) {
+        let povertyRate = povertyData.Poverty_Rate; 
+        let doctorRatio = povertyData.Children_to_Doctor_Ratio; 
+        let lat = povertyData.Latitude; 
+        let lng = povertyData.Longitude; 
+        let zip = povertyData.Zip_Code; 
+
+        // Determine the color based on doctor ratio
+        let color = getPovertyColors(doctorRatio, minRatio, maxRatio);
+
+        // Create a diamond shape using a divIcon
+        let diamondMarker = L.divIcon({
+            className: 'diamond-marker', // Custom class for styling
+            html: `<div style="width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 20px solid ${color}; transform: rotate(45deg);"></div>`,
+            iconSize: [20, 20] // Adjust size as needed
+        });
+
+        // Create a marker for each location using the diamond shape
+        let marker = L.marker([lat, lng], { icon: diamondMarker }).bindPopup('Zip Code: ' + zip + '<br>Poverty Rate: $' + povertyRate +'<br>Children to Doctor ratio: ' + doctorRatio); // Add poverty rate to popup
+
+        povertyMarkers.push(marker); // Add the marker to the array
+    });
+
+    // Add all markers to the map
+    L.layerGroup(povertyMarkers).addTo(povertyRateLayer);
+
+    // Create a legend control
+    var legendPovertyRate = L.control({ position: 'bottomright' });
+
+    legendPovertyRate.onAdd = function() {
+        let div = L.DomUtil.create('div', 'info legend');
+        grades = [0, 0.2, 0.4, 0.6, 0.8, 1]; // Normalized values
+        let colors = ['darkgray','mediumorchid','blueviolet','darkviolet', 'indigo','black'];
+
+        // Add a title to the legend
+        div.innerHTML += '<h4>Children to Doctor Ratio</h4>';
+
+        // Loop through the grades and create a colored square for each
+        for (let i = 0; i < grades.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + colors[i] +'; width: 20px; height: 20px; display: inline-block; margin-right: 5px;"></i> ' +
+                grades[i] + (grades[i + 1] ? ' &ndash; ' + grades[i + 1] + '<br>' : '+');
+        }
+   
+        // Add the background styling for the legend container
+        div.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+        div.style.padding = '10px';
+        div.style.borderRadius = '5px';
+        div.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.2)';
+
+        return div;
+    };
+
+    // Add the legend to the map
+    legendPovertyRate.addTo(map); // Initially add to the map
+
+    // Function to show/hide the legend based on layer visibility
+    function updateLegendVisibility() {
+        if (map.hasLayer(povertyRateLayer)) {
+            legendPovertyRate.addTo(map); // Show legend if layer is visible
+        } else {
+            map.removeControl(legendPovertyRate); // Hide legend if layer is not visible
+        }
+    }
+
+    // Call this function to set the initial visibility
+    updateLegendVisibility();
+
+    // Add an event listener to update the legend visibility when the layer is toggled
+    povertyRateLayer.on('add', updateLegendVisibility);
+    povertyRateLayer.on('remove', updateLegendVisibility);
+}
+
+
+function getPovertyColors(ratio, minRatio, maxRatio) {
+    const normalized = normalize(ratio, minRatio, maxRatio);
+
+    let colorScale = d3.scaleLinear()
+        .domain([0, 0.2, 0.4, 0.6, 0.8, 1])  // Normalized values
+        .range(['darkgray','mediumorchid','blueviolet','darkviolet', 'indigo','black']);
+
+    return colorScale(normalized);
+}
+
+// Fetching data and creating markers
+d3.json('/api/v1.0/locations')
+.then(function(data) {
+    createMarkerPovertyRate(data);
+});
+
+//////////////////// POVERTY RATE LAYER ENDS HERE ////////////////////////////
+
 // Control panel to turn on/off layers
 L.control.layers(null, {
     "Percentage of insured children": coverageLayer,
     "Children per doctor": doctorRatioLayer,  // Ensure this layer is available in the control panel
     "Population Density vs Children to Doctor Ratio": combinedLayer,  // Adding the new combined layer
-    "Family Median Income and children per doctor rate": medianIncomeLayer
+    "Family Median Income and children per doctor rate": medianIncomeLayer,
+    "Poverty Rate and children per doctor rate": povertyRateLayer
 }).addTo(map);
