@@ -11,15 +11,15 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // Making empty group for layers:
 let coverageLayer = L.layerGroup();  
 let doctorRatioLayer = L.layerGroup();  
-let combinedLayer = L.layerGroup();  // This is the new combined layer for population density and doctor ratio
-let medianIncomeLayer = L.layerGroup(); /* Median Income Layer added */
-let povertyRateLayer = L.layerGroup(); /* Poverty Rate Layer added */
+let combinedLayer = L.layerGroup(); 
+let medianIncomeLayer = L.layerGroup(); 
+let povertyRateLayer = L.layerGroup(); 
 
-// Function to create the custom triangle marker for coverageRate
+// Making custom triangle marker depends on coverageRate
 function getCoverageMarker(coverageRate) {
     const size = Math.max(10, 30 - coverageRate / 2);  // Smaller size based on coverage rate
 
-    // Creating a triangle icon using HTML and CSS
+    // Making a triangle icon using HTML and CSS and L.divIcon.
     const triangleIcon = L.divIcon({
         className: 'coverage-triangle',  // Custom class
         html: `<div style="width: 0; height: 0; border-left: ${size}px solid transparent; border-right: ${size}px solid transparent; border-bottom: ${size * 1.5}px solid ${getCoverageColor(coverageRate)};"></div>`,
@@ -45,7 +45,7 @@ function createCoverageTriangle(location) {
     L.marker([location.Latitude, location.Longitude], {
         icon: coverageMarker  // Use the custom triangle icon
     })
-    .bindPopup('<b>Coverage Rate: ' + coverageRate.toFixed(2) + '%</b>')  // Showing coverage rate in the popup
+    .bindPopup('<b>Coverage Rate: ' + coverageRate.toFixed(2) + '%</b>')  // Showing coverage rate in the popup. Using toFixed to round the number to 2 decimal points.
     .addTo(coverageLayer);  // Adding the marker to the coverage layer
 }
 

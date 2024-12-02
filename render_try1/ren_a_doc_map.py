@@ -5,11 +5,13 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import sessionmaker
 import os
 
+# Creating Flask aplication
 app = Flask(__name__)
 
+# CORS (Cross-Origin Resource Sharing) -  making API available form different domens
 CORS(app)
 
-# Get the DATABASE_URL environment variable set by Render
+# Get the DATABASE_URL environment variable set by Render. (Databases are saved on server)
 database_url = os.getenv("DATABASE_URL")
 
 # Uncomment and replace with your local database URL if necessary:
@@ -19,15 +21,20 @@ database_url = os.getenv("DATABASE_URL")
 if not database_url:
     raise ValueError("DATABASE_URL environment variable is not set.")
 
+# Create connection with database
 engine = create_engine(database_url)
 
+# Automatic maping of tables form database
 Base = automap_base()
 
+# Preparing databases to use them later in aplication
 Base.prepare(autoload_with=engine)
 
+# Making access to tables in database
 Demographics = Base.classes.demographics
 Population = Base.classes.population
 
+# Making routes 
 
 @app.route("/")
 def home():
@@ -43,12 +50,7 @@ def map_page():
 def plots_page():
     return render_template("3_plots.html")
 
-
-@app.route("/ethical_implications")
-def ethical_implications():
-    return render_template("ethical.html")
-
-
+# Making route for API, whitch is giving datas in JSON for GET request
 @app.route("/api/v1.0/locations")
 def get_locations():
     # Create a new session to interact with the database
@@ -105,7 +107,7 @@ def get_locations():
         return jsonify({"error": str(e)})
 
     finally:
-        # Close the session to prevent memory leaks and ensure cleanup
+        # Close the session to prevent memory leaks. Finally will close the session even if error will occured. 
         session.close()
 
 
