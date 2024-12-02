@@ -85,7 +85,7 @@ function createDoctorRatioCircle(location, minRatio, maxRatio) {
     let lng = location.Longitude;
 
     L.circle([lat, lng], {
-        radius: 6000,  // Size of the circle
+        radius: 4500,  // Size of the circle
         color: getDoctorRatioColor(ratio, minRatio, maxRatio),
         fillColor: getDoctorRatioColor(ratio, minRatio, maxRatio),
         fillOpacity: 0.6,  
