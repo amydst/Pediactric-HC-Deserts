@@ -1,103 +1,57 @@
-/*body,html {
-  min-height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 25;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: rgb(26, 9, 141);
-
-}
-*/
-html {
-  margin: 0px;
-  height: 100%;
-  width: 100%;
-  font-family:Verdana, Geneva, Tahoma, sans-serif
-}
-
 body {
-  margin: 0px;
-  min-height: 100%;
-  width: 100%;
-  font-size: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  color: black;
 }
 
 /* Homepage styling */
 .home-page {
-  background-image: url("/static/images/pediatrician.jpg");
-  background-size: cover;  /* Ensure background image covers the entire area */
-  background-position: center;  /* Center the background image */
-  background-attachment: relative;  /* Fix the background image while scrolling */
+  background-image: url("/static/images/pediatrician.jpg"); /* Full path to image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: black;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 0;
+}
+
+/* New text overlay styling */
+.text-overlay {
+  background-color: #f2e1c1;  /* Creamy color background */
   width: 100%;  /* Full width of the screen */
-  height: 100vh;  /* Full viewport height */
-  /*padding: 20px;  /* Text padding */
-  position: realative;
+  height: 27%;  /* height */
+  padding: 20px 20px;  /* text */
+  position: absolute;
   top: 0;
   left: 0;
   z-index: 2;
   color: black;
   text-align: center;
-  font-family:Verdana;
-}
-
-/* text overlay styling */
-.text-overlay {
-  /* Create a semi-transparent overlay effect to lighten the image */
-  background-color: rgba(255, 255, 255, 0.75);  /* White background with 60% opacity */
-  /* Alternatively, you could use rgba(255, 255, 255, 0.4) for lighter */
-  width: 60%;  /* Full width of the screen */
-  height: 100%;  /* height */
-  /*padding: 10px 10px;  /* text */
-  position: absolute;
-  top: 0;
-  left: 23%;
-  z-index: 2;
-  color: rgb(11, 43, 83);
-  text-align: justify;
-  
 }
 
 .text-overlay h1 {
-  font-size: 2em;  /* Font size */
+  font-size: 1.6rem;  /* Font size */
   margin: 0;
-  padding-bottom: 1px;
-  padding-top: 2%;
-  text-align: center;
+  padding-bottom: 10px;
 }
 
-.text-overlay h2 {
-  font-size: 1.5em;  /* Font size */
-  margin: 0;
-  padding-bottom: 1px;
-  text-align: center;
-}
-
-.text-overlay h3 {
-  font-size: 1.2em;  /* Font size */
-  margin: 0;
-  padding-bottom: 1px;
-  text-align: center;
+.text-overlay .subtitle {
+  font-size: 2.5rem;  /* Font size */
+  font-weight: bold;
+  margin: 10px 0;
 }
 
 .text-overlay p {
-  font-size: 1em;  /* Font size */
+  font-size: 1rem;  /* Font size */
   margin: 5px 0;
-  /*line-height: 1.5;*/
-  text-align: center;
-  padding-bottom: 1px;
-}
-
-.text-overlay ul {
-  list-style-position: inside; /* Moves the bullet inside the text block */
-  padding: 0; /* Remove any default padding*/
-  margin: 0; /* Remove any default margin */
-  display: flex;
-  flex-direction: column;
-  align-items: justified; /* Center all list items */
-  justify-content: center; /* Center items vertically if needed*/
-  text-align: center;
-  font-size: 1em;  /* Font size */
-  padding-bottom: 5px;
+  line-height: 1.5;
 }
 
 .text-overlay a {
@@ -197,60 +151,4 @@ body {
     height: 100vh;
     width: 100%;
   }
-}
-/*
-main {
-  height: 100vh;
-  height: -webkit-fill-available;
-  max-height: 100vh;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding-left: 25;
-}*/
-
-.dropdown-toggle { outline: 0; }
-
-.btn-toggle {
-  padding: .25rem .5rem;
-  font-weight: 600;
-  color: var(--bs-emphasis-color);
-  background-color: transparent;
-}
-.btn-toggle:hover,
-.btn-toggle:focus {
-  color: rgba(var(--bs-emphasis-color-rgb), .85);
-  background-color: var(--bs-tertiary-bg);
-}
-
-.btn-toggle::before {
-  width: 1.25em;
-  line-height: 0;
-  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
-  transition: transform .35s ease;
-  transform-origin: .5em 50%;
-}
-
-[data-bs-theme="dark"] .btn-toggle::before {
-  content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%28255,255,255,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
-}
-
-.btn-toggle[aria-expanded="true"] {
-  color: rgba(var(--bs-emphasis-color-rgb), .85);
-}
-.btn-toggle[aria-expanded="true"]::before {
-  transform: rotate(90deg);
-}
-
-.btn-toggle-nav a {
-  padding: .1875rem .5rem;
-  margin-top: .125rem;
-  margin-left: 1.25rem;
-}
-.btn-toggle-nav a:hover,
-.btn-toggle-nav a:focus {
-  background-color: var(--bs-tertiary-bg);
-}
-
-.scrollarea {
-  overflow-y: auto;
 }
