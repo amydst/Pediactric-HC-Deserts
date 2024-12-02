@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!--Checking if Bootstrap CSS is loaded -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let bootstrapLink = document.querySelector('link[href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"]');
+            if (!bootstrapLink) {
+                console.error("Bootstrap CSS failed to load!");
+            } else {
+                console.log("Bootstrap CSS loaded successfully.");
+            }
+        });
+    </script>
+
+    <style>
+        /* Setting the background image */
+        body {
+            background-image: url('{{ url_for("static", filename="images/results.jpg") }}');
+            background-size: cover;   /* Image covers the entire page */
+            background-position: center center; /* Keeps the image centered */
+            background-attachment: fixed; /* Keeps the background fixed when scrolling */
+            color: white; /* Set text color to white */
+            font-family: Arial, sans-serif; /* Font */
+        }
+
+        .container {
+            margin-top: 50px;
+            background-color: rgba(0, 0, 0, 0.5);  /* Adds a dark overlay behind the text */
+            padding: 30px;
+            border-radius: 10px;  /* Rounded corners for a smoother look */
+        }
+
+        .analysis-item {
+            margin-bottom: 20px;
+        }
+
+        .analysis-body {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .analysis-title {
+            font-weight: bold;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        /* Styling for the "Why is this important?" */
+        .important-section {
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            color: black;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 class="text-center mb-5">Health Coverage & Pediatric Care Analysis</h1>
+
+    <!-- Analysis Results -->
+    <div class="list-group">
+
+        <!-- Summary of Findings -->
+        <div class="list-group-item analysis-item">
+            <h5 class="analysis-title">Summary of Findings:</h5>
+            <p class="analysis-body">This study investigates the distribution of pediatricians and the factors that contribute to access to pediatric care in California. Key findings include:</p>
+        </div>
+
+        <!-- Result 1 -->
+        <div class="list-group-item analysis-item">
+            <h5 class="analysis-title">1. High Health Insurance Coverage</h5>
+            <p class="analysis-body">California boasts a 96.5% health insurance coverage rate for children, primarily due to programs like Medi-Cal, which provide low-income families with access to affordable healthcare.</p>
+        </div>
+
+        <!-- Result 2 -->
+        <div class="list-group-item analysis-item">
+            <h5 class="analysis-title">2. Pediatrician Shortages</h5>
+            <p class="analysis-body">On average, there is one pediatrician for every 1,115 children in California. However, areas like Bakersfield face more severe shortages, primarily due to geographic isolation and a lack of medical professionals.</p>
+        </div>
+
+        <!-- Result 3 -->
+        <div class="list-group-item analysis-item">
+            <h5 class="analysis-title">3. Limited Correlation with Population Density</h5>
+            <p class="analysis-body">There is a very weak correlation between population density and the number of children per pediatrician. This suggests that factors other than population density, such as access to healthcare infrastructure, are more influential in shaping pediatric care availability.</p>
+        </div>
+
+        <!-- Result 4 -->
+        <div class="list-group-item analysis-item">
+            <h5 class="analysis-title">4. Family Income and Pediatric Care</h5>
+            <p class="analysis-body">While there is a statistically significant relationship between family median income and the children-to-pediatrician ratio, it only explains 5.14% of the variability in pediatric care distribution. This indicates that family income has a relatively minor impact on access to pediatric care.</p>
+        </div>
+
+        <!-- Result 5 -->
+        <div class="list-group-item analysis-item">
+            <h5 class="analysis-title">5. Poverty and Pediatric Care</h5>
+            <p class="analysis-body">Similarly, the poverty ratio has a statistically significant relationship with the children-to-pediatrician ratio, but it also accounts for only 5.14% of the variability, highlighting that poverty plays a limited role in shaping the pediatric care landscape.</p>
+        </div>
+
+        <!-- Conclusion -->
+        <div class="list-group-item analysis-item">
+            <h5 class="analysis-title">Conclusion</h5>
+            <p class="analysis-body">In conclusion, while socioeconomic factors like family income and poverty are statistically significant, they explain only a small portion of the variability in pediatric care distribution. Geographic factors, such as isolation and access to healthcare infrastructure, appear to play a more critical role in determining access to pediatric services.</p>
+        </div>
+        
+    </div>
+
+    <!-- Why is this important? -->
+    <div class="important-section">
+        <h5 class="analysis-title">Why is this important?</h5>
+        <p class="analysis-body">Comparing these factors can help identify areas with limited access to pediatric care and highlight the social factors (such as income, poverty, population density, and insurance coverage) that most affect children's health and access to healthcare. This allows for better planning of health policies and investments in pediatric care in regions that need it the most.</p>
+    </div>
+</div>
+
+<!-- Bootstrap JS and Popper.js (these must be loaded after the content) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+<!-- Checking if Bootstrap JS is loaded (error if not) -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const popperJs = document.querySelector('script[src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"]');
+        const bootstrapJs = document.querySelector('script[src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"]');
+
+        if (!popperJs || !bootstrapJs) {
+            console.error("One or more JavaScript files failed to load!");
+        } else {
+            console.log("All necessary JS files loaded successfully.");
+        }
+    });
+</script>
+
+</body>
+</html>

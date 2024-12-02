@@ -50,6 +50,10 @@ def map_page():
 def plots_page():
     return render_template("3_plots.html")
 
+@app.route("/result")
+def result_page():
+    return render_template("result.html")
+
 # Making route for API, whitch is giving datas in JSON for GET request
 @app.route("/api/v1.0/locations")
 def get_locations():
