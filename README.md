@@ -1,8 +1,8 @@
 # Access to Pediatric Care in California: Analyzing the Socioeconomic Factors Behind Healthcare Deserts
 ## Project 3: Group 1. Data visualization track
-## Amy Dos Santos, Chloe King, Aleksandra Kutz, Carmen Dual
+## Amy Dos Santos, Aleksandra Kutz, Carmen Dual, Chloe King.
 
-
+https://project-3-tbuy.onrender.com/
 
 ### **Project Overview:** 
 Pediatricians are specially trained to provide optimal care for children, and research shows that pediatric care leads to better health outcomes for children compared to care provided by general or family doctors. Specialized pediatric care not only benefits children's health, but it also proves to be more cost-effective for families, insurance companies, and government programs.<sup>1,8</sup>
@@ -41,6 +41,7 @@ This project aims to investigate the socioeconomic factors that may contribute t
 ### **How to use and interact with the project:**
 
 All the data is stored in a Postgres database, which is accessed through a Flask using SQLAlchemy, all visualizations are created using Javascript and can be accessed through the links on the main page.
+https://project-3-tbuy.onrender.com/
 
 
 ### **Ethical Considerations**
